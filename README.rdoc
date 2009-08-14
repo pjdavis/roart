@@ -4,21 +4,18 @@
   /       \
 
   
-    by PJ Davis
-    http://github.com/pjdavis/roart
+by PJ Davis
+http://github.com/pjdavis/roart
 
 == DESCRIPTION:
-  If you are using Best Practical's Request Tracker (RT) and you 
-  need to interact with tickets from other applications, Roart provides
-  an interface that is slightly reminiscent of ActiveRecord. 
+If you are using Best Practical's Request Tracker (RT) and you need to interact with tickets from other applications, Roart provides an interface that is slightly reminiscent of ActiveRecord. 
 
 
 == FEATURES/PROBLEMS:
 
-  * Access RT Tickets through an ActiveRecord like API
+* Access RT Tickets through an ActiveRecord like API
   
-  *This has only been tested against RT 3.6. Changes to the REST interface in later versions
-  of RT may break stuff. 
+* This has only been tested against RT 3.6. Changes to the REST interface in later versions of RT may break stuff. 
 
 == SYNOPSIS:
 
