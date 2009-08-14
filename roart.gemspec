@@ -9,11 +9,11 @@ Gem::Specification.new do |s|
   s.date = %q{2009-08-14}
   s.description = %q{Interface for working with Request Tracker (RT) tickets inspired by ActiveRecord.}
   s.email = %q{pj.davis@gmail.com}
-  s.extra_rdoc_files = ["History.txt", "README.rdoc", "lib/.DS_Store"]
-  s.files = ["History.txt", "README.rdoc", "Rakefile", "lib/.DS_Store", "lib/roart.rb", "lib/roart/connection.rb", "lib/roart/core/array.rb", "lib/roart/core/string.rb", "lib/roart/errors.rb", "lib/roart/roart.rb", "lib/roart/ticket.rb", "lib/roart/ticket_page.rb", "roart.gemspec", "spec/roart/connection_spec.rb", "spec/roart/core/array_spec.rb", "spec/roart/core/string_spec.rb", "spec/roart/roart_spec.rb", "spec/roart/ticket_page_spec.rb", "spec/roart/ticket_spec.rb", "spec/roart_spec.rb", "spec/spec_helper.rb", "test/test_roart.rb"]
+  s.extra_rdoc_files = ["History.txt", "README.rdoc"]
+  s.files = ["History.txt", "README.rdoc", "Rakefile", "lib/roart.rb", "lib/roart/connection.rb", "lib/roart/core/array.rb", "lib/roart/core/string.rb", "lib/roart/errors.rb", "lib/roart/roart.rb", "lib/roart/ticket.rb", "lib/roart/ticket_page.rb", "roart.gemspec", "spec/roart/connection_spec.rb", "spec/roart/core/array_spec.rb", "spec/roart/core/string_spec.rb", "spec/roart/roart_spec.rb", "spec/roart/ticket_page_spec.rb", "spec/roart/ticket_spec.rb", "spec/roart_spec.rb", "spec/spec_helper.rb", "test/test_roart.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/pjdavis/roart}
-  s.rdoc_options = ["--main", "README.txt"]
+  s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{roart}
   s.rubygems_version = %q{1.3.2}

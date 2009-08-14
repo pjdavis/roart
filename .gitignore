@@ -3,3 +3,5 @@ announcement.txt
 coverage
 doc
 pkg
+*.gem
+**/.DS_Store
