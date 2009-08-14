@@ -1,0 +1,2 @@
+== 0.1.0 / 2009-08-13
+Initial Commit. Base functionality added. Can search for tickets, and see all info on tickets. Ticket History not yet implemented.

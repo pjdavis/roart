@@ -1,0 +1,77 @@
+== Roart
+ 
+  \___\__o/
+  /       \
+
+  
+    by PJ Davis
+    http://github.com/pjdavis/roart
+
+== DESCRIPTION:
+  If you are using Best Practical's Request Tracker (RT) and you 
+  need to interact with tickets from other applications, Roart provides
+  an interface that is slightly reminiscent of ActiveRecord. 
+
+
+== FEATURES/PROBLEMS:
+
+  * Access RT Tickets through an ActiveRecord like API
+  
+  *This has only been tested against RT 3.6. Changes to the REST interface in later versions
+  of RT may break stuff. 
+
+== SYNOPSIS:
+
+* Create a class to interact with your ticket system
+  
+    require 'rubygems'
+    require 'roart'
+    
+    class Ticket < Roart::Ticket
+      connection :server => 'http://my.rt.server.com', :user => 'myuser', :pass => 'mypass'
+      
+    end
+    
+* Search for tickets
+
+    my_tickets = Ticket.find(:all, :queue => 'Scutters', :status => [:new, :open])
+    my_tickets.each do |ticket|
+      puts ticket.subject
+    end
+    
+    #-> New John Wayne packages
+    #-> Medi-lab training
+    
+* See all info for a ticket
+  
+    my_ticket = Ticket.find(:first, :queue => 'Issues', :status => :new)
+    ticket.creator #-> rimmer@reddwarf.com
+    ticket.subject #-> Where is the Bomb?
+    
+
+== REQUIREMENTS:
+
+* mechanize
+* A working RT3 install.
+  
+== INSTALL:
+
+    $ gem sources -a http://gems.github.com
+    $ sudo gem install pjdavis-roart
+
+== LICENSE:
+  
+             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                     Version 2, December 2004
+  
+  Copyright (C) 2009 PJ Davis
+  
+  Everyone is permitted to copy and distribute verbatim or modified
+  copies of this license document, and changing it is allowed as long
+  as the name is changed.
+  
+             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+  
+   0. You just DO WHAT THE FUCK YOU WANT TO.
+
