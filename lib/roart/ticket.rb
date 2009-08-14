@@ -122,7 +122,6 @@ module Roart
       
       def find_all(options)
         uri = construct_search_uri(options)
-        puts uri
         tickets = get_tickets_from_search_uri(uri)
       end
       
