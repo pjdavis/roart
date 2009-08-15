@@ -296,4 +296,23 @@ describe "Ticket" do
     
   end
   
+  describe 'histories' do
+    
+    before do
+      search_array = ['1:subject']
+      search_array.extend(Roart::TicketPage)
+      full_ticket = Roart::Ticket.send(:instantiate, {:id => 1, :subject => 'subject', :full => true})
+      @ticket = Roart::Ticket.send(:instantiate, search_array.to_search_array ).first
+    end
+    
+    it 'should return history objects' do
+      @ticket.histories.class.should == Class
+    end
+    
+    it 'should have a default of the ticket id' do
+      @ticket.histories.instance_variable_get("@default_options").should == {:ticket => @ticket}
+    end
+    
+  end
+  
 end

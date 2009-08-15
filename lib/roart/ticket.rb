@@ -32,6 +32,10 @@ module Roart
       end
     end
     
+    def histories
+      @histories ||= Roart::History.default(:ticket => self)
+    end
+    
     class << self #class methods
       
       # Gives or Sets the connection object for the RT Server.
