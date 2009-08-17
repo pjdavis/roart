@@ -103,7 +103,7 @@ module Roart
       end
       
       def uri_for(ticket)
-        uri = @default_options[:ticket].class.connection.rest_path + "ticket/#{ticket.id}/history?format=l"
+        uri = self.default_options[:ticket].class.connection.rest_path + "ticket/#{ticket.id}/history?format=l"
       end
       
     end

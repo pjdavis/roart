@@ -14,6 +14,18 @@ describe "History" do
     
   end
   
+  describe 'getting ticket history' do
+    
+    it 'should create the crect URI' do
+      connection = mock('connection', :rest_path => 'REST/1.0/')
+      myclass = mock('class', :connection => connection)
+      ticket = mock(:ticket, :id => 1, :class => myclass)
+      hash = mock(:options_hash, :[] => ticket)
+      Roart::History.should_receive(:default_options).and_return(hash)
+      Roart::History.send(:uri_for, ticket).should == 'REST/1.0/ticket/1/history?format=l'
+    end
+  end
+  
   describe 'reading history pages' do
     
     before do
@@ -32,6 +44,14 @@ describe "History" do
     
     it 'should have an id' do
       @histories.first.id.should == 34725
+    end
+    
+    it 'should return itself for all' do
+      @histories.all.should == @histories
+    end
+    
+    it 'should return the ticket' do
+      @histories.ticket.should == @ticket
     end
     
   end
