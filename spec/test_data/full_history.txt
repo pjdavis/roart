@@ -1,0 +1,126 @@
+RT/3.6.6 200 Ok
+
+# 5/5 (id/34725/total)
+
+id: 34725
+Ticket: 12345
+TimeTaken: 0
+Type: Create
+Field: 
+OldValue: 
+NewValue: 
+Data: 
+Description: Ticket created by Dallas-stezuohc@LEESSUMMITHONDA.COM
+
+Content: Now you can get big real fast at an affordable price
+         http://www.lameppe.com/
+
+
+Creator: Dallas-stezuohc@LEESSUMMITHONDA.COM
+Created: 2008-06-03 09:24:32
+
+Attachments: 
+             16377: untitled (77b)
+             16379: untitled (248b)
+
+
+--
+
+# 5/5 (id/34727/total)
+
+id: 34727
+Ticket: 12345
+TimeTaken: 0
+Type: EmailRecord
+Field: 
+OldValue: 
+NewValue: 
+Data: <rt-3.6.6-50432-1212485073-937.12345-456-0@somewhere.com>
+Description: Outgoing email recorded by RT_System
+
+Content: 
+         Greetings,
+         
+         This message has been automatically generated in response to the creation of a trouble ticket at Somewhere Technical Support regarding:
+         	"SUPPORT EMAIL: Somewhere- 2 pills a day and you will be good"
+         
+         There is no need to reply to this message right now.  Your ticket has been
+         assigned an ID of [RequestTracker #12345].
+         
+         Please include the ID in the subject line, or "reply" to this message, for all future correspondence about this issue.
+         
+         You can also call us 24 hours a day, 7 days a week.
+         
+         We appreciate your business!
+         
+         Sincerely,
+         
+         Somewhere Technical Support Team
+         
+         Thank you,
+         support@somewhere.com
+         1-800-468-3474
+         
+         -------------------------------------------------------------------------
+         Now you can get big real fast at an affordable price
+         http://www.lameppe.com/
+
+
+Creator: RT_System
+Created: 2008-06-03 09:24:33
+Attachments: 
+
+--
+
+# 5/5 (id/34871/total)
+
+id: 34871
+Ticket: 12345
+TimeTaken: 0
+Type: Take
+Field: Owner
+OldValue: 10
+NewValue: 527
+Data: 
+Description: Taken by someone
+Content: This transaction appears to have no content
+Creator: someone
+Created: 2008-06-03 10:39:16
+Attachments: 
+
+--
+
+# 5/5 (id/34883/total)
+
+id: 34883
+Ticket: 12345
+TimeTaken: 0
+Type: Comment
+Field: 
+OldValue: 
+NewValue: 
+Data: No Subject
+Description: Comments added by someone
+Content: SPAM
+Creator: someone
+Created: 2008-06-03 10:39:49
+Attachments: 
+
+--
+
+# 5/5 (id/34885/total)
+
+id: 34885
+Ticket: 12345
+TimeTaken: 0
+Type: Status
+Field: Status
+OldValue: new
+NewValue: deleted
+Data: 
+Description: Ticket deleted by someone
+Content: This transaction appears to have no content
+Creator: someone
+Created: 2008-06-03 10:39:50
+Attachments: 
+

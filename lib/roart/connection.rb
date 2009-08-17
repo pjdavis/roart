@@ -25,6 +25,10 @@ module Roart
       add_methods!
     end
     
+    def rest_path
+      self.server + '/REST/1.0/'
+    end
+    
     def get(uri)
       @agent.get(uri).body
     end

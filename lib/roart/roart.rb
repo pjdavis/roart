@@ -8,4 +8,17 @@ module Roart
     end
   end
   
+  
+  module MethodFunctions
+    
+    def add_methods!
+      @attributes.each do |key, value|
+        (class << self; self; end).send :define_method, key do
+          return value
+        end
+      end 
+    end
+    
+  end
+  
 end

@@ -1,2 +1,5 @@
+== 0.1.1 / 2009-08-17
+Added History functionality. #histories now loads an array of history objects into memory and you can access them like you would a regular array. A few connivence methods (last, count) have also been added.
+
 == 0.1.0 / 2009-08-13
 Initial Commit. Base functionality added. Can search for tickets, and see all info on tickets. Ticket History not yet implemented.

@@ -46,4 +46,26 @@ describe 'ticket page' do
     
   end
   
+  describe 'ticket history hash' do
+    
+    before do
+      @page = File.open(File.join(File.dirname(__FILE__), %w[ .. test_data single_history.txt])).readlines.join
+      @page = @page.split("\n")
+      @page.extend(Roart::TicketPage)
+    end
+    
+    it 'should give back the hash of history' do
+      @page.to_history_hash.class.should == Hash
+    end
+    
+    it 'should have some content' do
+      @page.to_history_hash[:content].should_not be_nil
+    end
+    
+    it 'should have the create type' do
+      @page.to_history_hash[:type].should == 'Create'
+    end
+    
+  end
+  
 end

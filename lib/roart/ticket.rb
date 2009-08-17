@@ -8,6 +8,8 @@ module Roart
   end
   
   class Ticket
+    
+    include Roart::MethodFunctions
   
     def initialize(attributes)
       Roart::check_keys!(attributes, Roart::Tickets::RequiredAttributes)
@@ -32,6 +34,8 @@ module Roart
       end
     end
     
+    #loads the ticket history from rt
+    #
     def histories
       @histories ||= Roart::History.default(:ticket => self)
     end
@@ -100,20 +104,20 @@ module Roart
       
       protected
       
-      def instantiate(ticket)
+      def instantiate(attrs)
         object = nil
-        if ticket.is_a?(Array)
+        if attrs.is_a?(Array)
           array = Array.new
-          ticket.each do |tick|
+          attrs.each do |attr|
             object = self.allocate
-            object.instance_variable_set("@attributes", tick)
+            object.instance_variable_set("@attributes", attr)
             object.send("add_methods!")
             array << object
           end
           return array
-        elsif ticket.is_a?(Hash)
+        elsif attrs.is_a?(Hash)
           object = self.allocate
-          object.instance_variable_set("@attributes", ticket)
+          object.instance_variable_set("@attributes", attrs)
           object.send("add_methods!")
         end
         object
@@ -267,16 +271,6 @@ module Roart
         end
       end
       
-    end
-      
-    protected
-    
-    def add_methods!
-      @attributes.each do |key, value|
-        (class << self; self; end).send :define_method, key do
-          return value
-        end
-      end 
     end
     
   end

@@ -1,6 +1,8 @@
 module Roart
   
   module TicketPage
+    
+    IntKeys = %w[id]
 
     def to_hash
       hash = Hash.new
@@ -31,6 +33,27 @@ module Roart
         array << hash
       end
       array
+    end
+
+# TODO: Don't throw away attachments (/^ {13})
+    def to_history_hash
+      hash = Hash.new
+      self.delete_if{|x| !x.include?(":") && !x.match(/^ {9}/) && !x.match(/^ {13}/)}
+      self.each do |ln|
+        if ln.match(/^ {9}/) && !ln.match(/^ {13}/)
+          hash[:content] << "\n" + ln.strip if hash[:content]
+        elsif ln.match(/^ {13}/)
+          hash[:attachments] << "\n" + ln.strip if hash[:attachments]
+        else
+          ln = ln.split(":")
+          unless ln.size == 1 || ln.first == 'Ticket' # we don't want to override the ticket method.
+            key = ln.delete_at(0).strip.underscore
+            value = ln.join(":").strip
+            hash[key.to_sym] = IntKeys.include?(key) ? value.to_i : value
+          end
+        end
+      end
+      hash
     end
     
   end

@@ -298,19 +298,34 @@ describe "Ticket" do
   
   describe 'histories' do
     
-    before do
+    before(:each) do
       search_array = ['1:subject']
       search_array.extend(Roart::TicketPage)
       full_ticket = Roart::Ticket.send(:instantiate, {:id => 1, :subject => 'subject', :full => true})
-      @ticket = Roart::Ticket.send(:instantiate, search_array.to_search_array ).first
+      @mock_connection.should_receive(:get).with('uri').and_return('200')
+      @ticket = Roart::Ticket.send(:instantiate, search_array.to_search_array).first
+      @ticket.class.should_receive(:connection).and_return(@mock_connection)
+      Roart::History.should_receive(:uri_for).with(@ticket).and_return('uri')
     end
     
     it 'should return history objects' do
-      @ticket.histories.class.should == Class
+      @ticket.histories.class.should == Roart::HistoryArray
     end
     
     it 'should have a default of the ticket id' do
-      @ticket.histories.instance_variable_get("@default_options").should == {:ticket => @ticket}
+      @ticket.histories.ticket.should == @ticket
+    end
+    
+    it 'should only spawn 1 dup class for each ticket' do
+      @ticket.histories.should === @ticket.histories
+    end
+    
+    it 'should have a last history that is equal to the last value' do
+      @ticket.histories.last.should == @ticket.histories[@ticket.histories.size - 1]
+    end
+    
+    it 'should have count, which is equal to size' do
+      @ticket.histories.count.should == @ticket.histories.size
     end
     
   end
