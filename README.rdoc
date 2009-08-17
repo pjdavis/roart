@@ -45,6 +45,11 @@ If you are using Best Practical's Request Tracker (RT) and you need to interact 
     ticket.creator #-> rimmer@reddwarf.com
     ticket.subject #-> Where is the Bomb?
     
+* Get history for a ticket
+    
+    my_ticket.histories #-> Returns an array of history objects
+    
+    
 
 == REQUIREMENTS:
 
