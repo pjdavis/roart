@@ -104,7 +104,7 @@ module Roart
       
       protected
       
-      def instantiate(attrs)
+      def instantiate(attrs) #:nodoc:
         object = nil
         if attrs.is_a?(Array)
           array = Array.new
@@ -123,21 +123,21 @@ module Roart
         object
       end
       
-      def find_initial(options={})
+      def find_initial(options={}) #:nodoc:
         options.update(:limit => 1)
         find_all(options).first
       end
       
-      def find_all(options)
+      def find_all(options) #:nodoc:
         uri = construct_search_uri(options)
         tickets = get_tickets_from_search_uri(uri)
       end
       
-      def find_by_ids(args, options)
+      def find_by_ids(args, options) #:nodoc:
         get_ticket_by_id(args.first)
       end
       
-      def page_array(uri)
+      def page_array(uri) #:nodoc:
         page = self.connection.get(uri)
         raise TicketSystemError, "Can't get ticket." unless page
         page = page.split("\n")   
@@ -150,14 +150,14 @@ module Roart
         end
       end
       
-      def get_tickets_from_search_uri(uri)
+      def get_tickets_from_search_uri(uri) #:nodoc:
         page = page_array(uri)
         page.extend(Roart::TicketPage)
         page = page.to_search_array
         self.instantiate(page)
       end
       
-      def get_ticket_from_uri(uri)
+      def get_ticket_from_uri(uri) #:nodoc:
         page = page_array(uri)
         page.extend(Roart::TicketPage)
         page = page.to_hash
@@ -165,13 +165,13 @@ module Roart
         self.instantiate(page)
       end
       
-      def get_ticket_by_id(id)
+      def get_ticket_by_id(id) #:nodoc:
         uri = "#{self.connection.server}/REST/1.0/ticket/"
         uri << id.to_s
         get_ticket_from_uri(uri)
       end
       
-      def construct_search_uri(options)
+      def construct_search_uri(options) #:nodoc:
         uri = "#{self.connection.server}/REST/1.0/search/ticket?"
         uri << 'orderby=-Created&' if options.delete(:order)
         unless options.empty?
@@ -191,7 +191,7 @@ module Roart
         uri
       end
       
-      def add_queue!(uri, queue)
+      def add_queue!(uri, queue) #:nodoc:
         return false unless queue
         if queue.is_a?(Array)
           queues = Array.new
@@ -204,7 +204,7 @@ module Roart
         end
       end
       
-      def add_custom_fields!(uri, options)
+      def add_custom_fields!(uri, options) #:nodoc:
         return false unless options
         options.each do |field, value|
           if value.is_a?(Array)
@@ -219,7 +219,7 @@ module Roart
         end
       end
       
-      def add_status!(uri, options)
+      def add_status!(uri, options) #:nodoc:
         return false unless options
         parts = Array.new
         if options.is_a?(Array)
@@ -234,7 +234,7 @@ module Roart
         uri << parts
       end
       
-      def add_searches!(uri, options)
+      def add_searches!(uri, options) #:nodoc:
         search_fields = %w( subject content content_type file_name)
         options.each do |key, value|
           if search_fields.include?(key.to_s)
@@ -252,7 +252,7 @@ module Roart
         end
       end
       
-      def add_dates!(uri, options)
+      def add_dates!(uri, options) #:nodoc:
         date_field = %w( created started resolved told last_updated starts due updated )
         options.each do |key, value|
           if date_field.include?(key.to_s)
