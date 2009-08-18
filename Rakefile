@@ -30,6 +30,6 @@ PROJ.description = "Interface for working with Request Tracker (RT) tickets insp
 PROJ.rdoc.main = 'README.rdoc'
 depend_on 'mechanize'
 
-PROJ.spec.opts << '--color --heckle'
+PROJ.spec.opts << '--color'
 
 # EOF
