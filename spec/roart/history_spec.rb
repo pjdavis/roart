@@ -30,6 +30,7 @@ describe "History" do
     
     before do
       @page = File.open(File.join(File.dirname(__FILE__), %w[ .. test_data full_history.txt])).readlines.join
+      @ticket = mock('ticket')
       Roart::History.should_receive(:get_page).and_return(@page)
       @histories = Roart::History.default(:ticket => @ticket)
     end

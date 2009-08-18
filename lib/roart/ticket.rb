@@ -10,7 +10,12 @@ module Roart
   class Ticket
     
     include Roart::MethodFunctions
-  
+    
+    # Creates a new ticket. Attributes queue and subject are required. Expects a hash with the attributes of the ticket.
+    #
+    #   ticket = MyTicket.new(:queue => "Some Queue", :subject => "The System is Down.")
+    #   ticket.id #-> This will be the ID of the ticket in the RT System.
+    #
     def initialize(attributes)
       Roart::check_keys!(attributes, Roart::Tickets::RequiredAttributes)
       if attributes.is_a?(Hash)
