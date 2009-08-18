@@ -1,3 +1,6 @@
+==0.1.3 / 2009-08-18
+Can now update tickets with #save. Returns true if saved, raises an error if not.
+
 ==0.1.2 / 2009-08-18
 Added Create ticket functionality. Ticket.new will create a ticket in the RT system and return that ticket.
 
