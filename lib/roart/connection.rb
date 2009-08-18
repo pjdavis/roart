@@ -33,6 +33,10 @@ module Roart
       @agent.get(uri).body
     end
     
+    def post(uri, payload)
+      @agent.post(uri, payload).body
+    end
+    
     protected
     
     def login

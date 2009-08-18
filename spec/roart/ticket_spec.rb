@@ -296,12 +296,42 @@ describe "Ticket" do
     
   end
   
+  describe 'manipulating tickets' do
+    
+    def to_content_format(data)
+      fields = data.map { |key,value| "#{key.to_s.camelize}: #{value}" unless value.nil? }
+      fields.compact.join("\n")
+    end
+    
+    before do 
+      post_data = @payload = {:subject => 'A New Ticket', :queue => 'My Queue'}
+      post_data.update(:id => 'ticket/new')
+      post_data = to_content_format(post_data)
+      mock_connection = mock('connection')
+      mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/new', {:content => post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 created.")
+      mock_connection.should_receive(:server).and_return('uri')
+      Roart::Ticket.should_receive(:connection).twice.and_return(mock_connection)
+    end
+    
+    it 'should be able to create a ticket' do
+      ticket = Roart::Ticket.new(@payload)
+    end
+    
+    it 'should return a newly created ticket' do
+      ticket = Roart::Ticket.new(@payload)
+      ticket.class.should == Roart::Ticket
+      ticket.id.should == 267783
+    end
+    
+  end
+  
   describe 'histories' do
     
     before(:each) do
       search_array = ['1:subject']
       search_array.extend(Roart::TicketPage)
       full_ticket = Roart::Ticket.send(:instantiate, {:id => 1, :subject => 'subject', :full => true})
+      @mock_connection = mock('connection')
       @mock_connection.should_receive(:get).with('uri').and_return('200')
       @ticket = Roart::Ticket.send(:instantiate, search_array.to_search_array).first
       @ticket.class.should_receive(:connection).and_return(@mock_connection)

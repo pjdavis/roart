@@ -3,7 +3,7 @@ module Roart
   module Tickets
     
     DefaultAttributes = %w(queue owner creator subject status priority initial_priority final_priority requestors cc admin_cc created starts started due resolved told last_updated time_estimated time_worked time_left full logs)
-    RequiredAttributes = %w(queue creator subject status created)
+    RequiredAttributes = %w(queue subject)
   
   end
   
@@ -15,6 +15,8 @@ module Roart
       Roart::check_keys!(attributes, Roart::Tickets::RequiredAttributes)
       if attributes.is_a?(Hash)
         @attributes = Roart::Tickets::DefaultAttributes.to_hash.merge(attributes)
+        @attributes.update(:id => 'ticket/new')
+        @attributes[:id] = create
       else
         raise ArgumentError, "Expects a hash."
       end
@@ -40,6 +42,21 @@ module Roart
       @histories ||= Roart::History.default(:ticket => self)
     end
     
+    protected
+      
+      def create
+        uri = "#{self.class.connection.server}/REST/1.0/ticket/new"
+        payload = @attributes.to_content_format
+        resp = self.class.connection.post(uri, :content => payload)
+        resp = resp.split("\n")
+        raise "Ticket Create Failed" unless resp.first.include?("200")
+        if tid = resp[2].match(/^# Ticket (\d+) created./)
+          return tid[1].to_i
+        else
+          raise "Ticket Create Failed"
+        end      
+      end
+    
     class << self #class methods
       
       # Gives or Sets the connection object for the RT Server.
@@ -55,11 +72,9 @@ module Roart
         else
           @connection
         end
-        @connection
       end
       
-      # Searches for a ticket or group of tickets with an active
-      # record like interface.
+      # Searches for a ticket or group of tickets with an active record like interface.
       #
       # Find has 3 different ways to search for tickets
       #
