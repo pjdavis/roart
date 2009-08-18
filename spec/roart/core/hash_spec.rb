@@ -8,4 +8,9 @@ describe 'hash extentions' do
     payload.to_content_format.include?("Queue: My Queue").should be_true
   end
   
+  it 'should handel custom fields' do
+    payload = {:cf_stuff => 'field'}
+    payload.to_content_format.should == "CF-Stuff: field"
+  end
+  
 end

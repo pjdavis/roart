@@ -2,7 +2,7 @@ module Roart
   
   module Tickets
     
-    DefaultAttributes = %w(queue owner creator subject status priority initial_priority final_priority requestors cc admin_cc created starts started due resolved told last_updated time_estimated time_worked time_left full logs)
+    DefaultAttributes = %w(queue owner creator subject status priority initial_priority final_priority requestors cc admin_cc created starts started due resolved told last_updated time_estimated time_worked time_left)
     RequiredAttributes = %w(queue subject)
   
   end
@@ -10,6 +10,8 @@ module Roart
   class Ticket
     
     include Roart::MethodFunctions
+    
+    attr_reader :full, :history
     
     # Creates a new ticket. Attributes queue and subject are required. Expects a hash with the attributes of the ticket.
     #
@@ -25,6 +27,7 @@ module Roart
       else
         raise ArgumentError, "Expects a hash."
       end
+      @history = false
       add_methods!
     end
     
@@ -45,6 +48,24 @@ module Roart
     #
     def histories
       @histories ||= Roart::History.default(:ticket => self)
+    end
+    
+    def save
+      uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/edit"
+      payload = @attributes.clone
+      payload.delete(:id)
+      payload = payload.to_content_format
+      resp = self.class.connection.post(uri, :content => payload)
+      resp = resp.split("\n")
+      puts payload
+      puts '=' *40
+      puts resp
+      raise "Ticket Update Failed" unless resp.first.include?("200")
+      if resp[2].match(/^# Ticket (\d+) updated./)
+        return true
+      else
+        raise "Ticket Create Failed"
+      end
     end
     
     protected
@@ -140,6 +161,7 @@ module Roart
           object.instance_variable_set("@attributes", attrs)
           object.send("add_methods!")
         end
+        @history = false
         object
       end
       
@@ -181,8 +203,9 @@ module Roart
         page = page_array(uri)
         page.extend(Roart::TicketPage)
         page = page.to_hash
-        page.update(:full => true)
-        self.instantiate(page)
+        ticket = self.instantiate(page)
+        ticket.instance_variable_set("@full", true)
+        ticket
       end
       
       def get_ticket_by_id(id) #:nodoc:

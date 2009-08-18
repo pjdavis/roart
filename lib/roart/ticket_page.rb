@@ -9,12 +9,16 @@ module Roart
       self.delete_if{|x| !x.include?(":")}
       self.each do |ln|
         ln = ln.split(":")
-        key = ln.delete_at(0).strip.underscore
-        value = ln.join(":").strip
-        hash[key.to_sym] = value
+        if ln[0] && ln[0].match(/^CF-.+/)
+          key = ln.delete_at(0)
+          key = "cf_" + key[3..key.length].gsub(/ /, "_")
+        else
+          key = ln.delete_at(0).strip.underscore
+          value = ln.join(":").strip
+          hash[key.to_sym] = value
+        end
       end
       hash[:id] = hash[:id].split("/").last.to_i
-      hash.update(:history => false)
       hash
     end
     

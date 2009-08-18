@@ -15,4 +15,7 @@ class String
     self.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
   end
   
+  def humanize
+    self.gsub(/_id$/, "").gsub(/_/, " ").capitalize
+  end
 end

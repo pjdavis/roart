@@ -14,7 +14,10 @@ module Roart
     def add_methods!
       @attributes.each do |key, value|
         (class << self; self; end).send :define_method, key do
-          return value
+          return @attributes[key]
+        end
+        (class << self; self; end).send :define_method, "#{key}=" do |new_val|
+          @attributes[key] = new_val
         end
       end 
     end
