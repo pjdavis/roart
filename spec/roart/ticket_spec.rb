@@ -337,22 +337,23 @@ describe "Ticket" do
     describe 'updating tickets' do
     
       before do 
-        post_data = @payload = {:subject => 'A New Ticket', :queue => 'My Queue'}
-        post_data[:subject] = 'An Old Ticket'
-        post_data = to_content_format(post_data)
-        mock_connection = mock('connection')
-        mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 updated.")
-        mock_connection.should_receive(:server).and_return('uri')
-        Roart::Ticket.should_receive(:connection).twice.and_return(mock_connection)
+        @post_data = @payload = {:subject => 'A New Ticket', :queue => 'My Queue'}
+        @post_data[:subject] = 'An Old Ticket'
+        @post_data = to_content_format(@post_data)
+        @mock_connection = mock('connection')
+        @mock_connection.should_receive(:server).and_return('uri')
+        Roart::Ticket.should_receive(:connection).twice.and_return(@mock_connection)
       end
       
       it 'should be able to update a ticket' do
+      @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 updated.")
         ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
         ticket.subject = 'An Old Ticket'
         ticket.save.should == true
       end
 
       it 'should keep the same id' do
+      @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 updated.")
         ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
         ticket.subject = 'An Old Ticket'
         ticket.save
@@ -360,10 +361,18 @@ describe "Ticket" do
       end
       
       it 'should save the ticket' do
+      @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 updated.")
         ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
         ticket.subject = 'An Old Ticket'
         ticket.save
         ticket.subject.should == 'An Old Ticket'
+      end
+
+      it 'should raise an error on failed save' do
+        @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 400 Not OK\n\n# U's A SUKKA, FOO!.")
+        ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+        ticket.subject = 'An Old Ticket'
+        lambda {ticket.save}.should raise_error
       end
       
     end

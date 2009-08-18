@@ -57,9 +57,6 @@ module Roart
       payload = payload.to_content_format
       resp = self.class.connection.post(uri, :content => payload)
       resp = resp.split("\n")
-      puts payload
-      puts '=' *40
-      puts resp
       raise "Ticket Update Failed" unless resp.first.include?("200")
       if resp[2].match(/^# Ticket (\d+) updated./)
         return true
@@ -161,7 +158,7 @@ module Roart
           object.instance_variable_set("@attributes", attrs)
           object.send("add_methods!")
         end
-        @history = false
+        object.instance_variable_set("@history", false)
         object
       end
       
