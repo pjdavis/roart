@@ -327,11 +327,6 @@ describe "Ticket" do
   
   describe 'manipulating tickets' do
     
-    def to_content_format(data)
-      fields = data.map { |key,value| "#{key.to_s.camelize}: #{value}" unless value.nil? }
-      fields.compact.join("\n")
-    end
-    
     describe 'creating tickets' do
     
       before do 
@@ -344,13 +339,19 @@ describe "Ticket" do
         Roart::Ticket.should_receive(:connection).twice.and_return(mock_connection)
       end
     
-      it 'should be able to create a ticket' do
+      it 'should be able to save a new ticket' do
         ticket = Roart::Ticket.new(@payload)
+        ticket.save
+      end
+      
+      it  'should be able to create a ticket' do
+        ticket = Roart::Ticket.create(@payload)
       end
     
       it 'should return a newly created ticket' do
         ticket = Roart::Ticket.new(@payload)
         ticket.class.should == Roart::Ticket
+        ticket.save
         ticket.id.should == 267783
       end
     

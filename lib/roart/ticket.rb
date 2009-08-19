@@ -10,8 +10,9 @@ module Roart
   class Ticket
     
     include Roart::MethodFunctions
+    include Roart::Callbacks
     
-    attr_reader :full, :history
+    attr_reader :full, :history, :saved
     
     # Creates a new ticket. Attributes queue and subject are required. Expects a hash with the attributes of the ticket.
     #
@@ -23,7 +24,7 @@ module Roart
       if attributes.is_a?(Hash)
         @attributes = Roart::Tickets::DefaultAttributes.to_hash.merge(attributes)
         @attributes.update(:id => 'ticket/new')
-        @attributes[:id] = create
+        @saved = false
       else
         raise ArgumentError, "Expects a hash."
       end
@@ -34,7 +35,7 @@ module Roart
     # Loads all information for a ticket from RT and lets full to true. 
     # This changes the ticket object and adds methods for all the fields on the ticket.
     # Custom fields will be prefixed with 'cf' so a custom field of 'phone'
-    # would be cf_phone
+    # would be cf_phone. custom fields hold their case from how they are defined in RT, so a custom field of PhoneNumber would be cf_PhoneNumber and a custom field of phone_number would be cf_phone_number
     #
     def load_full!
       unless self.full
@@ -50,34 +51,57 @@ module Roart
       @histories ||= Roart::History.default(:ticket => self)
     end
     
+    # if a ticket is new, calling save will create it in the ticketing system and assign the id that it gets to the id attribute. It returns true if the save was successful, and false if something went wrong
+    #
     def save
-      uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/edit"
-      payload = @attributes.clone
-      payload.delete(:id)
-      payload = payload.to_content_format
-      resp = self.class.connection.post(uri, :content => payload)
-      resp = resp.split("\n")
-      raise "Ticket Update Failed" unless resp.first.include?("200")
-      if resp[2].match(/^# Ticket (\d+) updated./)
-        return true
+      if self.id == "ticket/new"
+        self.create
       else
-        raise "Ticket Create Failed"
+        self.before_update
+        uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/edit"
+        payload = @attributes.clone
+        payload.delete(:id)
+        payload = payload.to_content_format
+        resp = self.class.connection.post(uri, :content => payload)
+        resp = resp.split("\n")
+        raise "Ticket Update Failed" unless resp.first.include?("200")
+        if resp[2].match(/^# Ticket (\d+) updated./)
+          self.after_update
+          true
+        else
+          false
+        end
       end
+    end
+    
+    # works just like save, but if the save fails, it raises an exception instead of silently returning false
+    #
+    def save!
+      raise "Ticket Create Failed" unless self.save
+      true
     end
     
     protected
       
-      def create
+      def create #:nodoc:
+        self.before_create
         uri = "#{self.class.connection.server}/REST/1.0/ticket/new"
         payload = @attributes.to_content_format
         resp = self.class.connection.post(uri, :content => payload)
         resp = resp.split("\n")
         raise "Ticket Create Failed" unless resp.first.include?("200")
         if tid = resp[2].match(/^# Ticket (\d+) created./)
-          return tid[1].to_i
+          @attributes[:id] = tid[1].to_i
+          self.after_create
+          true
         else
-          raise "Ticket Create Failed"
+          false
         end      
+      end
+      
+      def create! #:nodoc:
+        raise "Ticket Create Failed" unless self.create
+        true
       end
     
     class << self #class methods
@@ -151,6 +175,13 @@ module Roart
         else
           defined?(@default_queue) ? @default_queue : nil
         end
+      end
+      
+      # creates a new ticket object and immediately saves it to the database.
+      def create(options)
+        ticket = self.new(options)
+        ticket.save
+        ticket
       end
       
       protected

@@ -8,6 +8,11 @@ def dbtime(time)
   time.strftime("%Y-%m-%d %H:%M:%S")
 end
 
+def to_content_format(data)
+  fields = data.map { |key,value| "#{key.to_s.camelize}: #{value}" unless value.nil? }
+  fields.compact.join("\n")
+end
+
 Spec::Runner.configure do |config|
   # == Mock Framework
   #
