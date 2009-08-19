@@ -82,21 +82,6 @@ module Roart
     
     class << self #class methods
       
-      # Gives or Sets the connection object for the RT Server.
-      # Accepts 3 parameters :server, :user, and :pass. Call this 
-      # at the top of your subclass to create the connection, 
-      #     class Ticket < Roart::Ticket
-      #       connection :server => 'server', :user => 'user', :pass => 'pass'
-      #     end
-      #
-      def connection(options=nil)
-        if options && @connection.nil?
-          @connection = Roart::Connection.new(options)
-        else
-          @connection
-        end
-      end
-      
       # Searches for a ticket or group of tickets with an active record like interface.
       #
       # Find has 3 different ways to search for tickets
@@ -137,6 +122,34 @@ module Roart
           when :first then  find_initial(options)
           when :all then    find_all(options)
           else              find_by_ids(args, options)
+        end
+      end
+      
+
+      # Gives or Sets the connection object for the RT Server.
+      # Accepts 3 parameters :server, :user, and :pass. Call this 
+      # at the top of your subclass to create the connection, 
+      #     class Ticket < Roart::Ticket
+      #       connection :server => 'server', :user => 'user', :pass => 'pass'
+      #     end
+      #
+      def connection(options=nil)
+        if options
+          @connection = Roart::Connection.new(options)
+        else
+          defined?(@connection) ? @connection : nil
+        end
+      end
+      
+      # Adds a default queue to search each time. This is overridden by 
+      # specifically including a :queue option in your find method. This can
+      # be an array of queue names or a string with a single queue name.
+      #
+      def default_queue(options=nil)
+        if options
+          @default_queue = options
+        else
+          defined?(@default_queue) ? @default_queue : nil
         end
       end
       
@@ -211,14 +224,18 @@ module Roart
         get_ticket_from_uri(uri)
       end
       
-      def construct_search_uri(options) #:nodoc:
+      def construct_search_uri(options={}) #:nodoc:
         uri = "#{self.connection.server}/REST/1.0/search/ticket?"
         uri << 'orderby=-Created&' if options.delete(:order)
-        unless options.empty?
+        unless options.empty? && default_queue.nil?
           uri << 'query= '
           query = Array.new
-        
-          add_queue!(query, options[:queues] || options[:queue])
+          
+          if options[:queues] || options[:queue]
+            add_queue!(query, options[:queues] || options[:queue])
+          else
+            add_queue!(query, default_queue)
+          end
           add_dates!(query, options)
           add_searches!(query, options)
           add_status!(query, options[:status])

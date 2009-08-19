@@ -143,7 +143,7 @@ describe "Ticket" do
         it 'should take multiple queues' do
           Roart::Ticket.send(:construct_search_uri, {:queue => ['myQueue', 'another']}).should == @query + "( Queue = 'myQueue' OR Queue = 'another' )"
         end
-        
+
       end
       
       describe 'dates' do
@@ -280,6 +280,28 @@ describe "Ticket" do
       
     end  
     
+  end
+  
+  describe "the default queue" do
+    
+    before do
+      @connection = mock('connection', :server => "server")
+      @search_string = "/REST/1.0/search/ticket?"
+      @query = @connection.server + @search_string + 'query= '
+      class MyTicket < Roart::Ticket; end
+      MyTicket.instance_variable_set("@default_queue", 'myQueue')
+      MyTicket.should_receive(:connection).and_return(@connection)
+    end
+      
+        
+    it 'should have a default queue' do
+      MyTicket.send(:construct_search_uri, :status => :new).should == @query + "Queue = 'myQueue' AND Status = 'new'"
+    end
+    
+    it 'should search without options and return the default queue' do
+      MyTicket.send(:construct_search_uri).should == @query + "Queue = 'myQueue'"
+    end
+  
   end
   
   describe 'ticket methods' do
