@@ -1,3 +1,9 @@
+==0.1.4 / 2009-08-19
+Implemented callbacks, you can now hook into the ticket life-cycle with before and after create and update.
+Saving works like ActiveRecord now, with save returning true if successful and false otherwise, and save! raising an error if unsuccessful.
+Creating tickets is more ActiveRecord like now, with new not saving to the ticketing system automatically, you must call save or save!. There is a create function to do this now. Although this does break backward compatability, I'm not going to bump the minor because a) nobody has forked this yet, and b) i skipped 0.
+You can now specify a default queue when you subclass Roart::Ticket. just add a default_queue 'queue name' to your class and that queue will automatically be searched unless you specify a queue.
+
 ==0.1.3 / 2009-08-18
 Can now update tickets with #save. Returns true if saved, raises an error if not.
 

@@ -49,6 +49,20 @@ If you are using Best Practical's Request Tracker (RT) and you need to interact 
     
     my_ticket.histories #-> Returns an array of history objects
     
+* Create a new ticket
+
+    issue = Ticket.new(:queue => 'some_queue', :subject => 'This is not working for me')
+    issue.id #-> 'ticket/new'
+    issue.save
+    issue.id #-> 23423
+    
+* Update a ticket
+
+    ticket = Ticket.find(23452)
+    ticket.subject #-> "Some Subject for a ticket."
+    ticket.subject #-> "Smoke me a kipper, I'll be back for breakfast."
+    ticket.save
+    ticket.subject #->"Smoke me a kipper, I'll be back for breakfast."
     
 
 == REQUIREMENTS:
