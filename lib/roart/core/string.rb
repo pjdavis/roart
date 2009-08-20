@@ -18,4 +18,9 @@ class String
   def humanize
     self.gsub(/_id$/, "").gsub(/_/, " ").capitalize
   end
+  
+  def blank?
+    self == ""
+  end
+  
 end

@@ -11,6 +11,7 @@ module Roart
     
     include Roart::MethodFunctions
     include Roart::Callbacks
+    include Roart::Validations
     
     attr_reader :full, :history, :saved
     
