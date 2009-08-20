@@ -217,11 +217,14 @@ module Roart
       end
       
       def find_by_ids(args, options) #:nodoc:
+        raise "First argument must be :all or :first, or an ID with no hash options" unless args.first.is_a?(Fixnum) || args.first.is_a?(String)
         get_ticket_by_id(args.first)
       end
       
       def page_array(uri) #:nodoc:
         page = self.connection.get(uri)
+        puts uri
+        puts page
         raise TicketSystemError, "Can't get ticket." unless page
         page = page.split("\n")   
         status = page.delete_at(0)

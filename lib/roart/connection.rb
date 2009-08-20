@@ -4,7 +4,7 @@ require 'mechanize'
 module Roart
   
   module Connections
-    RequiredConfig = %w(server user pass)
+    RequiredConfig = %w(server user pass adapter)
   
   end
   
@@ -20,9 +20,9 @@ module Roart
         Roart::check_keys!(conf, Roart::Connections::RequiredConfig)
         @conf = conf
       end
-    
-      @agent = login
+      
       add_methods!
+      @connection = ConnectionAdapter.new(@conf)
     end
     
     def rest_path
@@ -30,24 +30,15 @@ module Roart
     end
     
     def get(uri)
-      @agent.get(uri).body
+      @connection.get(uri)
     end
     
     def post(uri, payload)
-      @agent.post(uri, payload).body
+      @connection.post(uri, payload)
     end
     
     protected
-    
-    def login
-      agent = WWW::Mechanize.new
-      page = agent.get(@conf[:server])
-      form = page.form('login')
-      form.user = @conf[:user]
-      form.pass = @conf[:pass]
-      page = agent.submit form
-      agent
-    end
+
     
     def add_methods!
       @conf.each do |key, value|
