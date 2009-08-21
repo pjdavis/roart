@@ -11,6 +11,7 @@ module Roart
     
     include Roart::MethodFunctions
     include Roart::Callbacks
+    require File.join(File.dirname(__FILE__), %w[ validations.rb ])
     include Roart::Validations
     
     attr_reader :full, :history, :saved
