@@ -73,6 +73,21 @@ module Roart
         end
       end
     end
+
+    # Add a comment to a ticket
+    # Example:
+    #   tix = Ticket.find(1000)
+    #   tix.comment("This is a comment", :time_worked => 45, :cc => 'someone@example.com')
+    def comment(comment, opt = {})
+      comment = {:text => comment, :action => 'Correspond'}.merge(opt)
+
+      uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/comment"
+      payload = comment.to_content_format
+      resp = self.class.connection.post(uri, :content => payload)
+      resp = resp.split("\n")
+      raise "Ticket Comment Failed" unless resp.first.include?("200")
+      !!resp[2].match(/^# Message recorded/)
+    end
     
     # works just like save, but if the save fails, it raises an exception instead of silently returning false
     #
