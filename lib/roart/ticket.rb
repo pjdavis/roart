@@ -338,7 +338,7 @@ module Roart
       end
       
       def add_searches!(uri, options) #:nodoc:
-        search_fields = %w( subject content content_type file_name)
+	search_fields = %w( subject content content_type file_name owner requestors cc admin_cc)
         options.each do |key, value|
           if search_fields.include?(key.to_s)
             key = key.to_s.camelize
