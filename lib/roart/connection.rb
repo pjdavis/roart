@@ -12,9 +12,9 @@ module Roart
   class Connection
   
     attr_reader :agent
+    attr_reader :conf
   
     def initialize(conf)
-    
       if conf.is_a?(String)
         raise "Loading Config File not yet implemented"
       elsif conf.is_a?(Hash)
@@ -31,6 +31,7 @@ module Roart
       @conf.merge!(conf)
       @agent = login
       add_methods!
+      self
     end
     
     def rest_path
