@@ -5,6 +5,7 @@ module Roart
   
   module Connections
     RequiredConfig = %w(server)
+    RequiredToLogin = %w(server user pass)
   
   end
   
@@ -17,15 +18,17 @@ module Roart
       if conf.is_a?(String)
         raise "Loading Config File not yet implemented"
       elsif conf.is_a?(Hash)
-        Roart::check_keys!(conf, Roart::Connections::RequiredConfig)
         @conf = conf
+      end
+      
+      if Roart::check_keys(conf, Roart::Connections::RequiredToLogin)
+        @agent = login
+        add_methods!
       end
     end
     
-    def authenticate(user, pass)
-      @conf[:user] = user
-      @conf[:pass] = pass
-      
+    def authenticate(conf)
+      @conf.merge!(conf)
       @agent = login
       add_methods!
     end
