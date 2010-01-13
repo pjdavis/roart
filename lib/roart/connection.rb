@@ -4,7 +4,7 @@ require 'mechanize'
 module Roart
   
   module Connections
-    RequiredConfig = %w(server user pass)
+    RequiredConfig = %w(server)
   
   end
   
@@ -20,7 +20,12 @@ module Roart
         Roart::check_keys!(conf, Roart::Connections::RequiredConfig)
         @conf = conf
       end
+    end
     
+    def authenticate(user, pass)
+      @conf[:user] = user
+      @conf[:pass] = pass
+      
       @agent = login
       add_methods!
     end

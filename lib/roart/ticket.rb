@@ -14,6 +14,10 @@ module Roart
     
     attr_reader :full, :history, :saved
     
+    def self.authenticate(user, pass)
+      connection.authenticate(user, pass)
+    end
+    
     # Creates a new ticket. Attributes queue and subject are required. Expects a hash with the attributes of the ticket.
     #
     #   ticket = MyTicket.new(:queue => "Some Queue", :subject => "The System is Down.")
