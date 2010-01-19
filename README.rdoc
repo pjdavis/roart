@@ -1,61 +1,61 @@
 == Roart
- 
+
   \___\__o/
   /       \
 
-  
+
 by PJ Davis
 http://github.com/pjdavis/roart
 
 == DESCRIPTION:
-If you are using Best Practical's Request Tracker (RT) and you need to interact with tickets from other applications, Roart provides an interface that is slightly reminiscent of ActiveRecord. 
+If you are using Best Practical's Request Tracker (RT) and you need to interact with tickets from other applications, Roart provides an interface that is slightly reminiscent of ActiveRecord.
 
 
 == FEATURES/PROBLEMS:
 
 * Access RT Tickets through an ActiveRecord like API
-  
-* This has only been tested against RT 3.6. Changes to the REST interface in later versions of RT may break stuff. 
+
+* This has only been tested against RT 3.6. Changes to the REST interface in later versions of RT may break stuff.
 
 == SYNOPSIS:
 
 * Create a class to interact with your ticket system
-  
+
     require 'rubygems'
     require 'roart'
-    
+
     class Ticket < Roart::Ticket
       connection :server => 'http://my.rt.server.com', :user => 'myuser', :pass => 'mypass'
-      
+
     end
-    
+
 * Search for tickets
 
     my_tickets = Ticket.find(:all, :queue => 'Scutters', :status => [:new, :open])
     my_tickets.each do |ticket|
       puts ticket.subject
     end
-    
+
     #-> New John Wayne packages
     #-> Medi-lab training
-    
+
 * See all info for a ticket
-  
+
     my_ticket = Ticket.find(:first, :queue => 'Issues', :status => :new)
     ticket.creator #-> rimmer@reddwarf.com
     ticket.subject #-> Where is the Bomb?
-    
+
 * Get history for a ticket
-    
+
     my_ticket.histories #-> Returns an array of history objects
-    
+
 * Create a new ticket
 
     issue = Ticket.new(:queue => 'some_queue', :subject => 'This is not working for me')
     issue.id #-> 'ticket/new'
     issue.save
     issue.id #-> 23423
-    
+
 * Update a ticket
 
     ticket = Ticket.find(23452)
@@ -63,20 +63,24 @@ If you are using Best Practical's Request Tracker (RT) and you need to interact 
     ticket.subject #-> "Smoke me a kipper, I'll be back for breakfast."
     ticket.save
     ticket.subject #->"Smoke me a kipper, I'll be back for breakfast."
-    
+
+* Comment on a Ticket
+    ticket = Ticket.find(23452)
+    ticket.comment("This is a lovely Ticket", :time_worked => 45, :cc => 'someone@example.com'))
+
 
 == REQUIREMENTS:
 
 * mechanize
 * A working RT3 install.
-  
+
 == INSTALL:
 
     $ gem sources -a http://gems.github.com
     $ sudo gem install pjdavis-roart
 
 == LICENSE:
-  
+
           (C) PJ Davis <pj.davis@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it under

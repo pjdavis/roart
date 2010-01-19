@@ -3,8 +3,8 @@ require File.join(File.dirname(__FILE__), %w[ .. spec_helper])
 describe "Ticket" do
   
   it "should have a connection" do
-    Roart::Connection.should_receive(:new).with('some options').and_return(true)
-    Roart::Ticket.connection('some options').should == true
+    Roart::Connection.should_receive(:new).with(:some => 'some options', :adapter => "www").and_return(true)
+    Roart::Ticket.connection(:some => 'some options', :adapter => "www").should == true
   end
   
   it "should find the first ticket" do
