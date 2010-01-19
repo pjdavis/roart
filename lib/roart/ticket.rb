@@ -16,6 +16,10 @@ module Roart
     
     attr_reader :full, :history, :saved
     
+    def self.authenticate(auth)
+      connection auth.merge(connection.conf)
+    end
+    
     # Creates a new ticket. Attributes queue and subject are required. Expects a hash with the attributes of the ticket.
     #
     #   ticket = MyTicket.new(:queue => "Some Queue", :subject => "The System is Down.")
@@ -74,6 +78,21 @@ module Roart
           false
         end
       end
+    end
+
+    # Add a comment to a ticket
+    # Example:
+    #   tix = Ticket.find(1000)
+    #   tix.comment("This is a comment", :time_worked => 45, :cc => 'someone@example.com')
+    def comment(comment, opt = {})
+      comment = {:text => comment, :action => 'Correspond'}.merge(opt)
+
+      uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/comment"
+      payload = comment.to_content_format
+      resp = self.class.connection.post(uri, :content => payload)
+      resp = resp.split("\n")
+      raise "Ticket Comment Failed" unless resp.first.include?("200")
+      !!resp[2].match(/^# Message recorded/)
     end
     
     # works just like save, but if the save fails, it raises an exception instead of silently returning false
@@ -332,7 +351,7 @@ module Roart
       end
       
       def add_searches!(uri, options) #:nodoc:
-        search_fields = %w( subject content content_type file_name)
+	search_fields = %w( subject content content_type file_name owner requestors cc admin_cc)
         options.each do |key, value|
           if search_fields.include?(key.to_s)
             key = key.to_s.camelize
