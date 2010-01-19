@@ -21,16 +21,16 @@ module Roart
     #   ticket = MyTicket.new(:queue => "Some Queue", :subject => "The System is Down.")
     #   ticket.id #-> This will be the ID of the ticket in the RT System.
     #
-    def initialize(attributes)
-      Roart::check_keys!(attributes, Roart::Tickets::RequiredAttributes)
-      if attributes.is_a?(Hash)
+    def initialize(attributes=nil)
+      if attributes
         @attributes = Roart::Tickets::DefaultAttributes.to_hash.merge(attributes)
-        @attributes.update(:id => 'ticket/new')
-        @saved = false
       else
-        raise ArgumentError, "Expects a hash."
+        @attributes = Roart::Tickets::DefaultAttributes.to_hash
       end
+      @attributes.update(:id => 'ticket/new')
+      @saved = false
       @history = false
+      @new_record = true
       add_methods!
     end
     
@@ -83,6 +83,10 @@ module Roart
       true
     end
     
+    def new_record?
+      return @new_record
+    end
+    
     protected
       
       def create #:nodoc:
@@ -95,6 +99,7 @@ module Roart
         if tid = resp[2].match(/^# Ticket (\d+) created./)
           @attributes[:id] = tid[1].to_i
           self.after_create
+          @new_record = false
           true
         else
           false
@@ -205,6 +210,7 @@ module Roart
           object.send("add_methods!")
         end
         object.instance_variable_set("@history", false)
+        object.instance_variable_set("@new_record", false)
         object
       end
       
@@ -225,8 +231,6 @@ module Roart
       
       def page_array(uri) #:nodoc:
         page = self.connection.get(uri)
-        puts uri
-        puts page
         raise TicketSystemError, "Can't get ticket." unless page
         page = page.split("\n")   
         status = page.delete_at(0)

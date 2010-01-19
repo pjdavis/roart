@@ -341,7 +341,9 @@ describe "Ticket" do
     
       it 'should be able to save a new ticket' do
         ticket = Roart::Ticket.new(@payload)
+        ticket.new_record?.should be_true
         ticket.save
+        ticket.new_record?.should be_false
       end
       
       it  'should be able to create a ticket' do
@@ -360,8 +362,9 @@ describe "Ticket" do
     describe 'updating tickets' do
     
       before do 
-        @post_data = @payload = {:subject => 'A New Ticket', :queue => 'My Queue'}
-        @post_data[:subject] = 'An Old Ticket'
+        @payload = {:queue => 'My Queue', :subject => 'An Old Ticket'}
+        @post_data = {:queue => 'My Queue', :subject => 'An Old Ticket'}
+        @payload[:subject] = 'A New Ticket'
         @post_data = to_content_format(@post_data)
         @mock_connection = mock('connection')
         @mock_connection.should_receive(:server).and_return('uri')
