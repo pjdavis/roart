@@ -4,8 +4,8 @@ require 'mechanize'
 module Roart
 
   module Connections
-    RequiredConfig = %w(server)
-    RequiredToLogin = %w(server user pass)
+    RequiredConfig = %w(server adapter)
+    RequiredToLogin = %w( user pass )
 
   end
 
@@ -20,17 +20,20 @@ module Roart
       elsif conf.is_a?(Hash)
         @conf = conf
       end
-      if Roart::check_keys(conf, Roart::Connections::RequiredToLogin)
-        @agent = login
+      if Roart::check_keys(conf, Roart::Connections::RequiredConfig)
+        @agent = @conf[:login]
         add_methods!
+        @connection = ConnectionAdapter.new(@conf)
+      else
+        raise "Configuration Error"
       end
     end
 
     def authenticate(conf)
-      @conf.merge!(conf)
-      @agent = login
-      add_methods!
-      self
+      if Roart::check_keys(conf, Roart::Connections::RequiredToLogin)
+        @connection.authenticate(conf)
+        self
+      end
     end
 
     def rest_path
