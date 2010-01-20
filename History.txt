@@ -1,3 +1,6 @@
+==0.1.5.2 / 2010-01-20
+New ticket objects now come with a default attribute :text that specifies the initial log of the ticket.
+
 ==0.1.5.1 / 2010-01-20
 Fixed a bug that caused custom fields not to show up in the ticket attributes
 

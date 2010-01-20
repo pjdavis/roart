@@ -2,7 +2,7 @@ module Roart
 
   module Tickets
 
-    DefaultAttributes = %w(queue owner creator subject status priority initial_priority final_priority requestors cc admin_cc created starts started due resolved told last_updated time_estimated time_worked time_left)
+    DefaultAttributes = %w(queue owner creator subject status priority initial_priority final_priority requestors cc admin_cc created starts started due resolved told last_updated time_estimated time_worked time_left text)
     RequiredAttributes = %w(queue subject)
 
   end
