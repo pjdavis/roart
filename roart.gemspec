@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roart}
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["PJ Davis"]
-  s.date = %q{2009-08-19}
+  s.date = %q{2010-01-12}
   s.description = %q{Interface for working with Request Tracker (RT) tickets inspired by ActiveRecord.}
   s.email = %q{pj.davis@gmail.com}
   s.extra_rdoc_files = ["History.txt", "README.rdoc", "spec/test_data/full_history.txt", "spec/test_data/single_history.txt"]

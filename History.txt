@@ -1,3 +1,11 @@
+==0.1.5.1 / 2010-01-20
+Fixed a bug that caused custom fields not to show up in the ticket attributes
+
+==0.1.5 / 2010-01-19
+Can add transactions ticket using #comment method. (via btucker)
+Can authenticate again after the Ticket class is declared. (via newellista)
+More search fields are now avaliable. (via threetee)
+
 ==0.1.4 / 2009-08-19
 Implemented callbacks, you can now hook into the ticket life-cycle with before and after create and update.
 Saving works like ActiveRecord now, with save returning true if successful and false otherwise, and save! raising an error if unsuccessful.

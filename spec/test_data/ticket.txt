@@ -1,0 +1,31 @@
+RT/3.6.6 200 Ok
+
+id: ticket/358171
+Queue: MyQueue
+Owner: some_guy
+Creator: some_guy
+Subject: MyQueue - some_guy - 1035328269 - DSL Modem Reset ESCALATED
+Status: open
+Priority: 1
+InitialPriority: 1
+FinalPriority: 10
+Requestors: some_guy@MyQueue.net
+Cc:
+AdminCc:
+Created: Sat Jan 16 14:40:38 2010
+Starts: Not set
+Started: Sat Jan 16 14:40:40 2010
+Due: Mon Jan 18 20:40:38 2010
+Resolved: Not set
+Told: Not set
+LastUpdated: Sat Jan 16 14:50:17 2010
+TimeEstimated: 0
+TimeWorked: 0
+TimeLeft: 0
+CF-BTN: 1035328269
+CF-Call Back Status:
+CF-Call Back Time:
+CF-Contact Name: some_guy
+CF-Contact Phone:
+CF-CMSID:
+CF-IssueCategory: DSL - Modem/Router Config

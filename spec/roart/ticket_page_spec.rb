@@ -14,6 +14,24 @@ describe 'ticket page' do
     end
   
   end
+
+	describe 'reading a ticket' do
+		
+		before do
+			@page = File.open(File.join(File.dirname(__FILE__), %w[ .. test_data ticket.txt])).readlines.join
+			@page = @page.split("\n")
+      @page.extend(Roart::TicketPage)
+		end
+		
+		it 'should include custom fields' do
+			@page.to_hash[:cf_BTN].should == '1035328269'
+		end
+		
+		it 'should be a hash' do
+			@page.to_hash.class.should == Hash
+		end
+		
+	end
   
   describe 'search array' do
     
