@@ -63,16 +63,20 @@ module Roart
         uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/edit"
         payload = @attributes.clone
         payload.delete(:id)
+        payload.delete(:text) #Can't have text in an update, only create, use comment for updateing
         payload = payload.to_content_format
         resp = self.class.connection.post(uri, :content => payload)
         resp = resp.split("\n")
         raise "Ticket Update Failed" unless resp.first.include?("200")
-        if resp[2].match(/^# Ticket (\d+) updated./)
-          self.after_update
-          true
-        else
-          false
+        resp.each do |line|
+          if line.match(/^# Ticket (\d+) updated./)
+            self.after_update
+            true
+          else
+            #TODO: Add warnign to ticket
+          end
         end
+        false
       end
     end
 
@@ -111,14 +115,17 @@ module Roart
         resp = self.class.connection.post(uri, :content => payload)
         resp = resp.split("\n")
         raise "Ticket Create Failed" unless resp.first.include?("200")
-        if tid = resp[2].match(/^# Ticket (\d+) created./)
-          @attributes[:id] = tid[1].to_i
-          self.after_create
-          @new_record = false
-          true
-        else
-          false
+        resp.each do |line|
+          if tid = line.match(/^# Ticket (\d+) created./)
+            @attributes[:id] = tid[1].to_i
+            self.after_create
+            @new_record = false
+            return true
+          else
+            #TODO: Add Warnings To Ticket
+          end
         end
+        return false
       end
 
       def create! #:nodoc:
