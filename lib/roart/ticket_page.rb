@@ -23,11 +23,28 @@ module Roart
       hash
     end
 
-    def to_search_array
+    def to_search_list_array
       array = Array.new
       self.each do |ticket|
         ticket.extend(Roart::TicketPage)
         array << ticket.to_hash
+      end
+      array
+    end
+
+    def to_search_array
+      array = Array.new
+      self.delete_if{|x| !x.include?(":")}
+      self.each do |ln|
+        hash = Hash.new
+        ln = ln.split(":")
+        id = ln.delete_at(0).strip.underscore
+        sub = ln.join(":").strip
+        hash[:id] = id.to_i
+        hash[:subject] = sub
+        hash[:full] = false
+        hash[:history] = false
+        array << hash
       end
       array
     end

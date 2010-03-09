@@ -2,62 +2,12 @@ RT/3.6.6 200 Ok
 
 id: ticket/3033
 Queue: Canada Express
-Owner: IT
-Creator: billjohnson
-Subject: Canada Express - Canada Inn Canada TX info not in Canada
+Subject: Canada Express
 Status: new
-Priority: 1
-InitialPriority: 1
-FinalPriority: 10
-Requestors: billjohnson@asdf.com
-Cc:
-AdminCc:
-Created: Tue Jan 19 18:17:05 2010
-Starts: Not set
-Started: Not set
-Due: Fri Jan 22 00:13:56 2010
-Resolved: Not set
-Told: Not set
-LastUpdated: Tue Jan 19 18:17:05 2010
-TimeEstimated: 0
-TimeWorked: 0
-TimeLeft: 0
-CF-BTN:
-CF-Call Back Status:
-CF-Call Back Time:
-CF-Contact Name: Canada Express
-CF-Contact Phone:
-CF-CMSID:
-CF-IssueCategory: HOTEL - Other
 
 --
 
-id: ticket/3861
-Queue: Orders
-Owner: jill
-Creator: billy
-Subject: WHATUP Networks - setup for Remote Monitoring
-Status: new
-Priority: 1
-InitialPriority: 1
-FinalPriority: 10
-Requestors: billy@joe.com
-Cc:
-AdminCc: bob@joe.com
-Created: Tue Jan 26 14:43:15 2010
-Starts: Not set
-Started: Not set
-Due: Wed Jan 27 20:41:14 2010
-Resolved: Not set
-Told: Not set
-LastUpdated: Tue Jan 26 14:43:26 2010
-TimeEstimated: 0
-TimeWorked: 0
-TimeLeft: 0
-CF-Call Back Status:
-CF-Call Back Time:
-CF-Contact Name: Hohn Jasty
-CF-Contact Phone: 256.555.6411
-CF-BTN:
-CF-CMSID:
-CF-IssueCategory: OTHER
+id: ticket/2354
+Queue: Canada Express
+Subject: Canada Express
+Status: open

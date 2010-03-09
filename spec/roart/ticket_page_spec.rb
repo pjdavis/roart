@@ -51,6 +51,22 @@ describe 'ticket page' do
     end
     
   end
+
+	describe "search list array" do
+	  before do
+			@array = [['id:234', 'subject:SomeTicket', ], ['id:432','subject:Another']]
+      @array.extend(Roart::TicketPage)
+      @array = @array.to_search_list_array
+		end
+		
+		it "should return an array of hashes" do
+		  @array.first.class.should == HashWithIndifferentAccess
+		end
+		
+		it "should put the search elements into the array" do
+			@array.first[:id].should == 234
+		end
+	end
   
   describe 'ticket history hash' do
     

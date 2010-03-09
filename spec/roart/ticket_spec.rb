@@ -72,16 +72,23 @@ describe "Ticket" do
     describe 'search' do
       
       it 'should give an array of tickets' do
-        Roart::Ticket.should_receive(:page_array).with('uri').and_return(['23:SomeTicket', '33:Another'])
+        Roart::Ticket.should_receive(:page_list_array).with('uri&format=l').and_return([['id:234', 'subject:SomeTicket', ], ['id:432','subject:Another']])
         Roart::Ticket.send(:get_tickets_from_search_uri, 'uri').size.should == 2
       end
       
-      it 'should not have full tickets' do
-        Roart::Ticket.should_receive(:page_array).with('uri').and_return(['23:SomeTicket', '33:Another'])
+      it 'should have full tickets' do
+        Roart::Ticket.should_receive(:page_list_array).with('uri&format=l').and_return([['id:234', 'subject:SomeTicket', ], ['id:432','subject:Another']])
         Roart::Ticket.send(:get_tickets_from_search_uri, 'uri').each do |ticket|
-          ticket.full.should_not be_true
+          ticket.full.should be_true
         end
       end
+
+			it 'should give back an array of arrays of strings' do
+				test_data = File.open(File.dirname(__FILE__) + "/../test_data/search_ticket.txt").readlines.join("\n")
+				connection = mock('connection', :get => test_data)
+	      Roart::Ticket.should_receive(:connection).and_return(connection)
+				Roart::Ticket.send(:page_list_array, 'uri').should == [["id: ticket/3033", "Queue: Canada Express", "Subject: Canada Express", "Status: new"], ["id: ticket/2354", "Queue: Canada Express", "Subject: Canada Express", "Status: open"]]
+			end
       
     end
     
