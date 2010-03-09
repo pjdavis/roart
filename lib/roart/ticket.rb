@@ -290,11 +290,37 @@ module Roart
         end
       end
 
+      def page_list_array(uri) #:nodoc:
+        page = self.connection.get(uri)
+        raise TicketSystemError, "Can't get ticket." unless page
+        page = page.split("\n")
+        status = page.delete_at(0)
+        if status.include?("200")
+          page = page.join("\n")
+          chunks = page.split(/^--$/)
+          page = []
+          for chunk in chunks
+            chunk = chunk.split("\n")
+            chunk.delete_if{|x| !x.include?(":")}
+            page << chunk
+          end
+          page
+        else
+          raise TicketSystemInterfaceError, "Error Getting Ticket: #{status}"
+        end
+      end
+
       def get_tickets_from_search_uri(uri) #:nodoc:
-        page = page_array(uri)
+        page = page_list_array(uri + "&format=l")
         page.extend(Roart::TicketPage)
         page = page.to_search_array
-        self.instantiate(page)
+        array = Array.new
+        for ticket in page
+          ticket = self.instantiate(ticket)
+          ticket.instance_variable_set("@full", true)
+          array << ticket
+        end
+        array
       end
 
       def get_ticket_from_uri(uri) #:nodoc:

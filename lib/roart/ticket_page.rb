@@ -25,17 +25,9 @@ module Roart
 
     def to_search_array
       array = Array.new
-      self.delete_if{|x| !x.include?(":")}
-      self.each do |ln|
-        hash = HashWithIndifferentAccess.new
-        ln = ln.split(":")
-        id = ln.delete_at(0).strip.underscore
-        sub = ln.join(":").strip
-        hash[:id] = id.to_i
-        hash[:subject] = sub
-        hash[:full] = false
-        hash[:history] = false
-        array << hash
+      self.each do |ticket|
+        ticket.extend(Roart::TicketPage)
+        array << ticket.to_hash
       end
       array
     end
