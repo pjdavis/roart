@@ -62,21 +62,25 @@ module Roart
         self.before_update
         uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/edit"
         payload = @attributes.clone
-        payload.delete(:id)
-        payload.delete(:text) #Can't have text in an update, only create, use comment for updateing
+        payload.delete("text")
+        payload.delete("id") # Can't have text in an update, only create, use comment for updateing
         payload = payload.to_content_format
+        puts payload
         resp = self.class.connection.post(uri, :content => payload)
+        puts resp
         resp = resp.split("\n")
         raise "Ticket Update Failed" unless resp.first.include?("200")
         resp.each do |line|
+          puts "line"
           if line.match(/^# Ticket (\d+) updated./)
             self.after_update
-            true
+            puts "FOUND"
+            return true
           else
             #TODO: Add warnign to ticket
           end
         end
-        false
+        return false
       end
     end
 
@@ -248,7 +252,7 @@ module Roart
             array << object
           end
           return array
-        elsif attrs.is_a?(Hash)
+        elsif attrs.is_a?(Hash) || attrs.is_a?(HashWithIndifferentAccess)
           object = self.allocate
           object.instance_variable_set("@attributes", attrs)
           object.send("add_methods!")

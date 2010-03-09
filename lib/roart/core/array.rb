@@ -1,11 +1,11 @@
 class Array
-  
+
   def to_hash
-    h = Hash.new
+    h = HashWithIndifferentAccess.new
     self.each do |element|
-      h.update(element.to_sym => nil)
+      h.update(element => nil)
     end
     h
   end
-  
+
 end

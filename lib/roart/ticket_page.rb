@@ -5,7 +5,7 @@ module Roart
     IntKeys = %w[id]
 
     def to_hash
-      hash = Hash.new
+      hash = HashWithIndifferentAccess.new
       self.delete_if{|x| !x.include?(":")}
       self.each do |ln|
         ln = ln.split(":")
@@ -17,9 +17,9 @@ module Roart
           key = ln.delete_at(0).strip.underscore
         end
         value = ln.join(":").strip
-        hash[key.to_sym] = value if key
+        hash[key] = value if key
       end
-      hash[:id] = hash[:id].split("/").last.to_i
+      hash["id"] = hash["id"].split("/").last.to_i
       hash
     end
 
@@ -27,7 +27,7 @@ module Roart
       array = Array.new
       self.delete_if{|x| !x.include?(":")}
       self.each do |ln|
-        hash = Hash.new
+        hash = HashWithIndifferentAccess.new
         ln = ln.split(":")
         id = ln.delete_at(0).strip.underscore
         sub = ln.join(":").strip
@@ -42,7 +42,7 @@ module Roart
 
 # TODO: Don't throw away attachments (/^ {13})
     def to_history_hash
-      hash = Hash.new
+      hash = HashWithIndifferentAccess.new
       self.delete_if{|x| !x.include?(":") && !x.match(/^ {9}/) && !x.match(/^ {13}/)}
       self.each do |ln|
         if ln.match(/^ {9}/) && !ln.match(/^ {13}/)
@@ -54,7 +54,7 @@ module Roart
           unless ln.size == 1 || ln.first == 'Ticket' # we don't want to override the ticket method.
             key = ln.delete_at(0).strip.underscore
             value = ln.join(":").strip
-            hash[key.to_sym] = IntKeys.include?(key) ? value.to_i : value
+            hash[key] = IntKeys.include?(key) ? value.to_i : value
           end
         end
       end

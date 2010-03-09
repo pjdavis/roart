@@ -17,7 +17,7 @@ module Roart
     def initialize(conf)
       if conf.is_a?(String)
         raise "Loading Config File not yet implemented"
-      elsif conf.is_a?(Hash)
+      elsif conf.class.name == Hash.name #TODO: Figure out why conf.is_a?(Hash) doesn't work
         @conf = conf
       end
       if Roart::check_keys(conf, Roart::Connections::RequiredConfig)

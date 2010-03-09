@@ -10,7 +10,7 @@ end
 
 def to_content_format(data)
   fields = data.map { |key,value| "#{key.to_s.camelize}: #{value}" unless value.nil? }
-  fields.compact.join("\n")
+  fields.compact.sort.join("\n")
 end
 
 Spec::Runner.configure do |config|

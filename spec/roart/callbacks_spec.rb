@@ -5,7 +5,7 @@ describe 'ticket callbacks' do
   describe 'create callbacks' do
     
     before do
-      post_data = @payload = {:subject => 'A New Ticket', :queue => 'My Queue'}
+      post_data = @payload = {:queue => 'My Queue', :subject => 'A New Ticket'}
       post_data.update(:id => 'ticket/new')
       post_data = to_content_format(post_data)
       mock_connection = mock('connection')
@@ -27,7 +27,7 @@ describe 'ticket callbacks' do
   describe 'update callbacks' do
     
     before do
-      @post_data = @payload = {:subject => 'A New Ticket', :queue => 'My Queue'}
+      @post_data = @payload = {:subject => 'A New Ticket', :queue => 'My Queue'}.with_indifferent_access
       @post_data[:subject] = 'An Old Ticket'
       @post_data = to_content_format(@post_data)
       @mock_connection = mock('connection')

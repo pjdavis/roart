@@ -28,7 +28,7 @@ describe 'ticket page' do
 		end
 		
 		it 'should be a hash' do
-			@page.to_hash.class.should == Hash
+			@page.to_hash.class.should == HashWithIndifferentAccess
 		end
 		
 	end
@@ -61,7 +61,7 @@ describe 'ticket page' do
     end
     
     it 'should give back the hash of history' do
-      @page.to_history_hash.class.should == Hash
+      @page.to_history_hash.class.should == HashWithIndifferentAccess
     end
     
     it 'should have some content' do
