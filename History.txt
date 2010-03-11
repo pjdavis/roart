@@ -1,5 +1,6 @@
 ==0.1.7 / 2010-30-11
 Added some new error classes, add removed any extraneous raise 'text' (via jrbingham)
+Removed debugging puts from the ticket file.
 
 ==0.1.6 / 2010-03-09
 Updated the search feature to pull all the ticket information at the same time, instead of only loading the id and subject.
