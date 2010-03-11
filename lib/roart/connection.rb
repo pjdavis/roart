@@ -16,7 +16,7 @@ module Roart
 
     def initialize(conf)
       if conf.is_a?(String)
-        raise "Loading Config File not yet implemented"
+        raise RoartError, "Loading Config File not yet implemented"
       elsif conf.class.name == Hash.name #TODO: Figure out why conf.is_a?(Hash) doesn't work
         @conf = conf
       end
@@ -25,7 +25,7 @@ module Roart
         add_methods!
         @connection = ConnectionAdapter.new(@conf)
       else
-        raise "Configuration Error"
+        raise RoartError, "Configuration Error"
       end
     end
 

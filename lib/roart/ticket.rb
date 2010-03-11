@@ -69,7 +69,7 @@ module Roart
         resp = self.class.connection.post(uri, :content => payload)
         puts resp
         resp = resp.split("\n")
-        raise "Ticket Update Failed" unless resp.first.include?("200")
+        raise TicketSystemError, "Ticket Update Failed" unless resp.first.include?("200")
         resp.each do |line|
           puts "line"
           if line.match(/^# Ticket (\d+) updated./)
@@ -95,14 +95,14 @@ module Roart
       payload = comment.to_content_format
       resp = self.class.connection.post(uri, :content => payload)
       resp = resp.split("\n")
-      raise "Ticket Comment Failed" unless resp.first.include?("200")
+      raise TicketSystemError, "Ticket Comment Failed" unless resp.first.include?("200")
       !!resp[2].match(/^# Message recorded/)
     end
 
     # works just like save, but if the save fails, it raises an exception instead of silently returning false
     #
     def save!
-      raise "Ticket Create Failed" unless self.save
+      raise TicketSystemError, "Ticket Create Failed" unless self.save
       true
     end
 
@@ -118,7 +118,7 @@ module Roart
         payload = @attributes.to_content_format
         resp = self.class.connection.post(uri, :content => payload)
         resp = resp.split("\n")
-        raise "Ticket Create Failed" unless resp.first.include?("200")
+        raise TicketSystemError, "Ticket Create Failed" unless resp.first.include?("200")
         resp.each do |line|
           if tid = line.match(/^# Ticket (\d+) created./)
             @attributes[:id] = tid[1].to_i
@@ -133,7 +133,7 @@ module Roart
       end
 
       def create! #:nodoc:
-        raise "Ticket Create Failed" unless self.create
+        raise TicketSystemError, "Ticket Create Failed" unless self.create
         true
       end
 
@@ -273,7 +273,7 @@ module Roart
       end
 
       def find_by_ids(args, options) #:nodoc:
-        raise "First argument must be :all or :first, or an ID with no hash options" unless args.first.is_a?(Fixnum) || args.first.is_a?(String)
+        raise ArgumentError, "First argument must be :all or :first, or an ID with no hash options" unless args.first.is_a?(Fixnum) || args.first.is_a?(String)
         get_ticket_by_id(args.first)
       end
 

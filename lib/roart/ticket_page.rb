@@ -7,6 +7,7 @@ module Roart
     def to_hash
       hash = HashWithIndifferentAccess.new
       self.delete_if{|x| !x.include?(":")}
+      raise TicketNotFoundError, "No tickets matching search criteria found."  if self.blank?
       self.each do |ln|
         ln = ln.split(":")
         key = nil
