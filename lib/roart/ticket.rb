@@ -65,16 +65,12 @@ module Roart
         payload.delete("text")
         payload.delete("id") # Can't have text in an update, only create, use comment for updateing
         payload = payload.to_content_format
-        puts payload
         resp = self.class.connection.post(uri, :content => payload)
-        puts resp
         resp = resp.split("\n")
         raise TicketSystemError, "Ticket Update Failed" unless resp.first.include?("200")
         resp.each do |line|
-          puts "line"
           if line.match(/^# Ticket (\d+) updated./)
             self.after_update
-            puts "FOUND"
             return true
           else
             #TODO: Add warnign to ticket
