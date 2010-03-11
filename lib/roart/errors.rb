@@ -8,4 +8,6 @@ module Roart
   
   class TicketSystemInterfaceError < RoartError; end
   
+  class TicketNotFoundError < RoartError; end
+  
 end
