@@ -405,7 +405,7 @@ describe "Ticket" do
         @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 400 Not OK\n\n# U's A SUKKA, FOO!.")
         ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
         ticket.subject = 'An Old Ticket'
-        lambda {ticket.save}.should raise_error
+        lambda {ticket.save}.should raise_error(Roart::TicketSystemError)
       end
       
     end
