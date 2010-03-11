@@ -279,7 +279,7 @@ module Roart
 
       def page_array(uri) #:nodoc:
         page = self.connection.get(uri)
-        raise TicketSystemError, "Can't get ticket." unless page
+        raise TicketSystemInterfaceError, "Can't get ticket." unless page
         page = page.split("\n")
         status = page.delete_at(0)
         if status.include?("200")
@@ -292,7 +292,7 @@ module Roart
 
       def page_list_array(uri) #:nodoc:
         page = self.connection.get(uri)
-        raise TicketSystemError, "Can't get ticket." unless page
+        raise TicketSystemInterfaceError, "Can't get ticket." unless page
         page = page.split("\n")
         status = page.delete_at(0)
         if status.include?("200")
