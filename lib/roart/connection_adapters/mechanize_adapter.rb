@@ -1,3 +1,5 @@
+require 'mechanize'
+
 module Roart
   module ConnectionAdapters
     class Mechanize
