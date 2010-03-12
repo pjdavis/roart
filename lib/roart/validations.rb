@@ -88,7 +88,14 @@ module Roart
       end
 
       def validates_presence_of(*args)
-
+        args.each do |field|
+          validator_proc = lambda do |obj|
+            if obj.send(field.to_sym).nil? || obj.send(field.to_sym).blank?
+              obj.errors.add(field.to_sym, "Can't Be Blank")
+            end
+          end
+          self.validator.add(validator_proc)
+        end
       end
 
       def validates_format_of(*args)

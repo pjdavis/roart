@@ -57,6 +57,28 @@ describe "validations" do
 
 	end
 	
+	describe "presence" do
+	  
+	  it "should validate presence of" do
+			class PresenceTicket < Roart::Ticket; validates_presence_of(:subject); end
+			ticket = inst_ticket(PresenceTicket)
+			ticket.subject = ""
+			ticket.valid?.should be_false
+			ticket.subject = "I'M HERE!"
+			ticket.valid?.should be_true
+    end
+    
+    it "should validate presence of" do
+			class PresenceTicket < Roart::Ticket; validates_presence_of(:subject); end
+			ticket = inst_ticket(PresenceTicket)
+			ticket.subject = nil
+			ticket.valid?.should be_false
+			ticket.subject = "I'M HERE!"
+			ticket.valid?.should be_true
+    end
+    
+  end
+	
 	describe "numericality" do
 		
 		it "should validate greater than" do
