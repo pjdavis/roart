@@ -40,7 +40,7 @@ describe "Connection" do
   it 'should give us back the whole thing' do
     mock_mech = mock('mech')
     @options = {:server => 'server', :user => 'user', :pass => 'pass', :adapter => 'mechanize'}
-    Roart::ConnectionAdapters::Mechanize.should_receive(:new).with(@options).and_return(mock_mech)
+    Roart::ConnectionAdapters::MechanizeAdapter.should_receive(:new).with(@options).and_return(mock_mech)
 		mock_mech.should_receive(:login).with(@options)
     mock_mech.should_receive(:get).with('uri').and_return('body')
     connection = Roart::Connection.new(@options)
