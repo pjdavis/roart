@@ -2,7 +2,7 @@ require 'mechanize'
 
 module Roart
   module ConnectionAdapters
-    class Mechanize
+    class MechanizeAdapter
 
       def initialize(config)
         @conf = config
@@ -10,7 +10,7 @@ module Roart
 
       def login(config)
         @conf.merge!(config)
-        agent = WWW::Mechanize.new
+        agent = Mechanize.new
         page = agent.get(@conf[:server])
         form = page.form('login')
         form.user = @conf[:user]

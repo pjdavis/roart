@@ -6,7 +6,7 @@ module Roart
     extend Forwardable
 
     def initialize(config)
-      @adapter = Roart::ConnectionAdapters.const_get(config[:adapter].capitalize).new(config)
+      @adapter = Roart::ConnectionAdapters.const_get(config[:adapter].capitalize + "Adapter").new(config)
       @adapter.login(config) if config[:user] && config[:pass]
     end
 
