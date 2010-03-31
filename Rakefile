@@ -28,7 +28,7 @@ PROJ.rubyforge.name = 'roart'
 PROJ.exclude = %w(.git pkg coverage)
 PROJ.description = "Interface for working with Request Tracker (RT) tickets inspired by ActiveRecord."
 PROJ.rdoc.main = 'README.rdoc'
-depend_on 'mechanize', '= 0.9.3' #this will go away when a stdlib adapter gets written
+depend_on 'mechanize' #this will go away when a stdlib adapter gets written
 
 PROJ.spec.opts << '--color'
 

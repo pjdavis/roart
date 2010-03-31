@@ -1,4 +1,10 @@
-==0.1.7 / 2010-30-11
+==0.1.8 / 2010-03-16
+Added validate presence of.
+Updated specs to test validations.
+No Longer depend on mechanize version 0.9.3 and get rid of those pesky deprecation warnings.
+The connection adapter classes are now suffixed with "Adapter", so Mechanize is now MechanizeAdapter. You still specify it with :adapter => 'mechanize', however.
+
+==0.1.7 / 2010-03-11
 Added some new error classes, add removed any extraneous raise 'text' (via jrbingham)
 Removed debugging puts from the ticket file.
 
