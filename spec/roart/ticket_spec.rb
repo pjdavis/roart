@@ -22,6 +22,27 @@ describe "Ticket" do
     Roart::Ticket.find(12345).should == 'a ticket'
   end
   
+  describe ' search with no matches' do
+	  before do
+	    results = 'RT/3.6.6 200 Ok
+
+      No matching results.'
+      connection = mock('connection', :get => results)
+	    Roart::Ticket.stub!(:connection).and_return(connection)
+	    connection.stub!(:server).and_return("http://test")
+	    
+    end
+	  
+	  it 'should give an empty array for :all' do
+	    Roart::Ticket.find(:all, :status => 'new').should == []
+    end
+    
+    it 'should raise when searching for an id' do
+      lambda {Roart::Ticket.find("123")}.should raise_error("No tickets matching search criteria found.")
+    end
+	  
+  end
+  
   describe "find initial" do 
   
     it 'should set options to include :limit => 1' do 
@@ -89,7 +110,7 @@ describe "Ticket" do
 	      Roart::Ticket.should_receive(:connection).and_return(connection)
 				Roart::Ticket.send(:page_list_array, 'uri').should == [["id: ticket/3033", "Queue: Canada Express", "Subject: Canada Express", "Status: new"], ["id: ticket/2354", "Queue: Canada Express", "Subject: Canada Express", "Status: open"]]
 			end
-      
+			
     end
     
     describe 'full ticket' do

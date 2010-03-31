@@ -309,6 +309,7 @@ module Roart
       def get_tickets_from_search_uri(uri) #:nodoc:
         page = page_list_array(uri + "&format=l")
         page.extend(Roart::TicketPage)
+
         page = page.to_search_list_array
         array = Array.new
         for ticket in page
