@@ -309,7 +309,6 @@ module Roart
       def get_tickets_from_search_uri(uri) #:nodoc:
         page = page_list_array(uri + "&format=l")
         page.extend(Roart::TicketPage)
-
         page = page.to_search_list_array
         array = Array.new
         for ticket in page
@@ -317,13 +316,15 @@ module Roart
           ticket.instance_variable_set("@full", true)
           array << ticket
         end
-        array
+        array ||= []
       end
 
       def get_ticket_from_uri(uri) #:nodoc:
         page = page_array(uri)
         page.extend(Roart::TicketPage)
-        page = page.to_hash
+        unless page = page.to_hash
+          raise TicketNotFoundError, "No ticket matching search criteria found."
+        end
         ticket = self.instantiate(page)
         ticket.instance_variable_set("@full", true)
         ticket
