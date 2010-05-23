@@ -1,3 +1,5 @@
+==0.1.9 / 2010-05-23
+Removed the String/Hash extensions copied from ActiveSupport and just added a dependency on ActiveSupport. Removed to_hash added to Array, as it conflicts with ActiveSupport's deep_merge.
 ==0.1.8 / 2010-03-16
 Added validate presence of.
 Updated specs to test validations.

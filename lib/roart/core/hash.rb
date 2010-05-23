@@ -1,4 +1,3 @@
-require "#{File.dirname(__FILE__)}/hash/indifferent_access.rb"
 class Hash
   def to_content_format
     fields = self.map do |key,value|
