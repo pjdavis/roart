@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["PJ Davis"]
-  s.date = %q{2010-03-17}
+  s.date = %q{2010-05-23}
   s.description = %q{Interface for working with Request Tracker (RT) tickets inspired by ActiveRecord.}
   s.email = %q{pj.davis@gmail.com}
   s.extra_rdoc_files = ["History.txt", "README.rdoc", "spec/test_data/full_history.txt", "spec/test_data/search_ticket.txt", "spec/test_data/single_history.txt", "spec/test_data/ticket.txt"]
@@ -18,19 +18,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Interface for working with Request Tracker (RT) tickets inspired by ActiveRecord}
 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<mechanize>, [">= 1.0.0"])
-      s.add_development_dependency(%q<bones>, [">= 2.5.1"])
-    else
-      s.add_dependency(%q<mechanize>, [">= 1.0.0"])
-      s.add_dependency(%q<bones>, [">= 2.5.1"])
-    end
-  else
-    s.add_dependency(%q<mechanize>, [">= 1.0.0"])
-    s.add_dependency(%q<bones>, [">= 2.5.1"])
-  end
+  s.add_runtime_dependency(%q<mechanize>, [">= 1.0.0"])
+  s.add_runtime_dependency(%q<activesupport>, [">= 2.0.0"])
+  s.add_development_dependency(%q<bones>, [">= 2.5.1"])
 end

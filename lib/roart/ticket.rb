@@ -2,7 +2,7 @@ module Roart
 
   module Tickets
 
-    DefaultAttributes = %w(queue owner creator subject status priority initial_priority final_priority requestors cc admin_cc created starts started due resolved told last_updated time_estimated time_worked time_left text)
+    DefaultAttributes = %w(queue owner creator subject status priority initial_priority final_priority requestors cc admin_cc created starts started due resolved told last_updated time_estimated time_worked time_left text).inject({}){|memo, k| memo[k] = nil; memo}
     RequiredAttributes = %w(queue subject)
 
   end
@@ -23,9 +23,9 @@ module Roart
     #
     def initialize(attributes=nil)
       if attributes
-        @attributes = Roart::Tickets::DefaultAttributes.to_hash.merge(attributes)
+        @attributes = Roart::Tickets::DefaultAttributes.merge(attributes)
       else
-        @attributes = Roart::Tickets::DefaultAttributes.to_hash
+        @attributes = Roart::Tickets::DefaultAttributes
       end
       @attributes.update(:id => 'ticket/new')
       @saved = false
