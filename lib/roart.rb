@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'active_support'
+require 'active_support/core_ext'
+
 module Roart
 
   # :stopdoc:
