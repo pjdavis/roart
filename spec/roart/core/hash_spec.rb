@@ -12,5 +12,11 @@ describe 'hash extentions' do
     payload = {:cf_stuff => 'field'}
     payload.to_content_format.should == "CF-Stuff: field"
   end
-  
+
+  it 'should use our content formatter for strings' do
+    payload = {:subject => 'A new ticket', :queue => 'My queue', :text => "A text"}
+    Roart::ContentFormatter.should_receive(:format_string).at_least(:once)
+    payload.to_content_format
+  end
+
 end
