@@ -361,27 +361,64 @@ describe "Ticket" do
         post_data.update(:id => 'ticket/new')
         post_data = to_content_format(post_data)
         mock_connection = mock('connection')
-        mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/new', {:content => post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 created.")
-        mock_connection.should_receive(:server).and_return('uri')
         Roart::Ticket.should_receive(:connection).twice.and_return(mock_connection)
+        mock_connection.should_receive(:server).and_return('uri')
+        mock_connection.should_receive(:post).
+          with('uri/REST/1.0/ticket/new', {:content => post_data}).
+          and_return(response_body)
       end
-    
-      it 'should be able to save a new ticket' do
-        ticket = Roart::Ticket.new(@payload)
-        ticket.new_record?.should be_true
-        ticket.save
-        ticket.new_record?.should be_false
-      end
+
+      let(:ticket) { Roart::Ticket.new(@payload) }
+
+      context "on success" do
+        let(:response_body) { "RT/3.6.6 200 Ok\n\n# Ticket 267783 created." }
+
+        it 'should be able to save a new ticket' do
+          ticket.new_record?.should be_true
+          ticket.save
+          ticket.new_record?.should be_false
+        end
+        
+        it 'should be able to create a ticket' do
+          ticket = Roart::Ticket.create(@payload)
+        end
       
-      it  'should be able to create a ticket' do
-        ticket = Roart::Ticket.create(@payload)
+        it 'should return a newly created ticket' do
+          ticket.class.should == Roart::Ticket
+          ticket.save
+          ticket.id.should == 267783
+        end
+
+        it 'should NOT have errors' do
+          ticket.save
+          ticket.errors.should be_empty
+        end
+
+        it 'should be saved' do
+          ticket.save
+          ticket.saved.should == true
+        end
       end
-    
-      it 'should return a newly created ticket' do
-        ticket = Roart::Ticket.new(@payload)
-        ticket.class.should == Roart::Ticket
-        ticket.save
-        ticket.id.should == 267783
+
+      context "on failure" do
+        let(:response_body) { "RT/4.0.5 200 Ok\n\n# Could not create ticket.\n# Status 'huj' isn't a valid status for tickets in this queue." }
+
+        it 'should return an unsaved ticket' do
+          ticket.class.should == Roart::Ticket
+          ticket.save
+          ticket.id.should == 'ticket/new'
+          ticket.should be_new_record
+        end
+
+        it 'should return false' do
+          ticket.save.should == false
+        end
+
+        it 'should have errors' do
+          ticket.save
+          ticket.errors.size.should == 1
+          ticket.errors[:base].should == ["# Status 'huj' isn't a valid status for tickets in this queue."]
+        end
       end
     
     end
@@ -396,36 +433,82 @@ describe "Ticket" do
         @mock_connection = mock('connection')
         @mock_connection.should_receive(:server).and_return('uri')
         Roart::Ticket.should_receive(:connection).twice.and_return(@mock_connection)
+        @mock_connection.should_receive(:post).
+          with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).
+          and_return(response_body)
       end
       
-      it 'should be able to update a ticket' do
-      @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 updated.")
-        ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
-        ticket.subject = 'An Old Ticket'
-        ticket.save.should == true
+      context "on success" do
+        let(:response_body) { "RT/3.6.6 200 Ok\n\n# Ticket 267783 updated." }
+
+        it 'should be able to update a ticket' do
+          ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+          ticket.subject = 'An Old Ticket'
+          ticket.save.should == true
+        end
+
+        it 'should keep the same id' do
+          ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+          ticket.subject = 'An Old Ticket'
+          ticket.save
+          ticket.id.should == 1
+        end
+        
+        it 'should save the ticket' do
+          ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+          ticket.subject = 'An Old Ticket'
+          ticket.save
+          ticket.subject.should == 'An Old Ticket'
+        end
       end
 
-      it 'should keep the same id' do
-      @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 updated.")
-        ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
-        ticket.subject = 'An Old Ticket'
-        ticket.save
-        ticket.id.should == 1
+      context "on 502 failure" do
+        let(:response_body) { "RT/3.6.6 502 Not OK\n\n# Dead gateway" }
+
+        it 'should raise an error on failed save' do
+          ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+          ticket.subject = 'An Old Ticket'
+          expect { ticket.save }.to raise_error(Roart::TicketSystemError)
+        end
       end
       
-      it 'should save the ticket' do
-      @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 200 Ok\n\n# Ticket 267783 updated.")
-        ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
-        ticket.subject = 'An Old Ticket'
-        ticket.save
-        ticket.subject.should == 'An Old Ticket'
+      context "on 200 failure" do
+        let(:response_body) { "RT/3.6.6 200 Probably OK\n\n# Could not update ticket\n# Queue is missing" }
+
+        it 'should set errors' do
+          ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+          ticket.subject = 'An Old Ticket'
+          expect { ticket.save }.not_to raise_error
+          ticket.errors.size.should == 1
+          ticket.errors[:base].should == ["# Queue is missing"]
+        end
       end
 
-      it 'should raise an error on failed save' do
-        @mock_connection.should_receive(:post).with('uri/REST/1.0/ticket/1/edit', {:content => @post_data}).and_return("RT/3.6.6 400 Not OK\n\n# U's A SUKKA, FOO!.")
-        ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
-        ticket.subject = 'An Old Ticket'
-        lambda {ticket.save}.should raise_error(Roart::TicketSystemError)
+      context "on 400 failure" do
+        let(:response_body) { "RT/3.6.6 400 Not OK\n\n# U's A SUKKA, FOO!." }
+
+        it 'should set errors' do
+          ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+          ticket.subject = 'An Old Ticket'
+          expect { ticket.save }.not_to raise_error
+          ticket.errors.size.should == 1
+          ticket.errors[:base].should == ["# U's A SUKKA, FOO!."]
+        end
+      end
+
+      context "on 409 failure" do
+        let(:response_body) { "RT/4.0.5 409 Syntax Error\n# Ticket 13 updated.\n# status2: Unknown field.\n\nid: \nStatus2: huj"}
+
+        it 'should set errors' do
+          ticket = Roart::Ticket.send(:instantiate, @payload.update(:id => 1))
+          ticket.subject = 'An Old Ticket'
+          expect { ticket.save }.not_to raise_error
+          ticket.errors.size.should == 2
+          ticket.errors[:base].should == [
+            "# Ticket 13 updated.",
+            "# status2: Unknown field."
+          ]
+        end
       end
       
     end

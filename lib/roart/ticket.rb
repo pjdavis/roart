@@ -96,20 +96,8 @@ module Roart
         uri = "#{self.class.connection.server}/REST/1.0/ticket/new"
         payload = @attributes.to_content_format
         resp = self.class.connection.post(uri, :content => payload)
-        resp = resp.split("\n")
-        raise TicketSystemError, "Ticket Create Failed" unless resp.first.include?("200")
-        resp.each do |line|
-          if tid = line.match(/^# Ticket (\d+) created./)
-            @attributes[:id] = tid[1].to_i
-            self.after_create
-            @new_record = false
-            @saved = true
-            return true
-          else
-            #TODO: Add Warnings To Ticket
-          end
-        end
-        return false
+
+        process_save_response(resp, :create)
       end
 
       def update
@@ -120,18 +108,38 @@ module Roart
         payload.delete("id") # Can't have text in an update, only create, use comment for updateing
         payload = payload.to_content_format
         resp = self.class.connection.post(uri, :content => payload)
-        resp = resp.split("\n")
-        raise TicketSystemError, "Ticket Update Failed" unless resp.first.include?("200")
-        resp.each do |line|
-          if line.match(/^# Ticket (\d+) updated./)
-            self.after_update
-            @saved = true
-            return true
-          else
-            #TODO: Add warnign to ticket
-          end
+
+        process_save_response(resp, :update)
+      end
+
+      SUCCESS_CODES = (200..299).to_a
+      CLIENT_ERROR_CODES = (400..499).to_a
+
+      def process_save_response(response, action)
+        errors.clear
+        action_name = action.to_s.capitalize
+
+        lines = response.split("\n").reject { |l| l.blank? }
+
+        status_line = lines.shift
+        status_line.present? or
+          raise TicketSystemError, "Ticket #{action_name} Failed (blank response)"
+
+        version, status_code, status_text = status_line.split(/\s+/,2)
+
+        if SUCCESS_CODES.include?(status_code.to_i) && lines[0] =~ /^# Ticket (\d+) (created|updated)/
+          @attributes[:id] = $1.to_i if $2 == 'created'
+          @new_record = false
+          @saved = true
+          self.__send__("after_#{action}")
+          return true
+        elsif (SUCCESS_CODES + CLIENT_ERROR_CODES).include?(status_code.to_i)
+          lines[0] =~ /^# Could not (create|update) ticket/ and lines.shift
+          lines.each { |line| errors.add_to_base(line) if line =~ /^#/ }
+          return false
+        else
+          raise TicketSystemError, "Ticket #{action_name} Failed (#{status_line})"
         end
-        return false
       end
 
       def create! #:nodoc:
