@@ -59,24 +59,7 @@ module Roart
       if self.id == "ticket/new"
         self.create
       else
-        self.before_update
-        uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/edit"
-        payload = @attributes.clone
-        payload.delete("text")
-        payload.delete("id") # Can't have text in an update, only create, use comment for updateing
-        payload = payload.to_content_format
-        resp = self.class.connection.post(uri, :content => payload)
-        resp = resp.split("\n")
-        raise TicketSystemError, "Ticket Update Failed" unless resp.first.include?("200")
-        resp.each do |line|
-          if line.match(/^# Ticket (\d+) updated./)
-            self.after_update
-            return true
-          else
-            #TODO: Add warnign to ticket
-          end
-        end
-        return false
+        self.update
       end
     end
 
@@ -120,9 +103,32 @@ module Roart
             @attributes[:id] = tid[1].to_i
             self.after_create
             @new_record = false
+            @saved = true
             return true
           else
             #TODO: Add Warnings To Ticket
+          end
+        end
+        return false
+      end
+
+      def update
+        self.before_update
+        uri = "#{self.class.connection.server}/REST/1.0/ticket/#{self.id}/edit"
+        payload = @attributes.clone
+        payload.delete("text")
+        payload.delete("id") # Can't have text in an update, only create, use comment for updateing
+        payload = payload.to_content_format
+        resp = self.class.connection.post(uri, :content => payload)
+        resp = resp.split("\n")
+        raise TicketSystemError, "Ticket Update Failed" unless resp.first.include?("200")
+        resp.each do |line|
+          if line.match(/^# Ticket (\d+) updated./)
+            self.after_update
+            @saved = true
+            return true
+          else
+            #TODO: Add warnign to ticket
           end
         end
         return false
