@@ -34,7 +34,7 @@ describe "Connection" do
 
   describe 'get and post' do
     before do
-      @agent = mock("agent", :null_object => true)
+      @agent = mock("agent").as_null_object
       Roart::ConnectionAdapter.should_receive(:new).and_return(@agent)
     end
   
