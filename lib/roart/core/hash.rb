@@ -5,6 +5,8 @@ class Hash
         value = Roart::ContentFormatter.format_string(value.to_s)
         if key.to_s.match(/^cf_.+/)
           "CF-#{key.to_s[3..key.to_s.length].gsub(/_/, " ").camelize.humanize}: #{value}"
+        elsif key.to_s.match(/^CF-.+/)
+          "#{key.to_s}: #{value}"
         else
           "#{key.to_s.camelize}: #{value}"
         end
