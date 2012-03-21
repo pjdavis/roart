@@ -22,7 +22,6 @@ module Roart
       if Roart::check_keys(conf, Roart::Connections::RequiredConfig)
         @agent = @conf[:login]
         add_methods!
-        @connection = ConnectionAdapter.new(@conf)
       else
         raise RoartError, "Configuration Error"
       end
@@ -30,7 +29,7 @@ module Roart
 
     def authenticate(conf)
       if Roart::check_keys(conf, Roart::Connections::RequiredToLogin)
-        @connection.authenticate(conf)
+        connection.authenticate(conf)
         self
       end
     end
@@ -40,15 +39,18 @@ module Roart
     end
 
     def get(uri)
-      @connection.get(uri)
+      connection.get(uri)
     end
 
     def post(uri, payload)
-      @connection.post(uri, payload)
+      connection.post(uri, payload)
     end
 
     protected
 
+    def connection
+      @connection ||= ConnectionAdapter.new(conf)
+    end
 
     def add_methods!
       @conf.each do |key, value|
