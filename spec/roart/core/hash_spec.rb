@@ -24,4 +24,9 @@ describe 'hash extentions' do
     payload.to_content_format
   end
 
+  it "should return sorted data with the same key multiple times when value is array" do
+    payload = { 'CF-My Day' => %w(Tue Wed Fri), 'CF-My Time' => %w(morning evening) }
+    payload.to_content_format.should == "CF-My Day: Fri\nCF-My Day: Tue\nCF-My Day: Wed\nCF-My Time: evening\nCF-My Time: morning"
+  end
+
 end
