@@ -4,23 +4,43 @@ module Roart
 
     IntKeys = %w[id]
 
+    CUSTOM_FIELD_REGEXP = /^(?!\s)(?:CF-([^:.]+)|CF\.\{([^}^:.]+)\}):(.*)$/.freeze
+
+    REGULAR_FIELD_REGEXP = /^(?!\s)([^:.]+):(.*)$/.freeze
+
     def to_hash
       hash = HashWithIndifferentAccess.new
-      self.delete_if{|x| !x.include?(":")}
+
       return false if self.size == 0
-      self.each do |ln|
-        ln = ln.split(":")
-        key = nil
-        if ln[0] && ln[0].match(/^CF-.+/)
-          key = ln.delete_at(0)
-          key = "cf_" + key[3..key.length].gsub(/ /, "_")
+
+      current_key = nil
+
+      self.each do |line|
+        case line
+        when CUSTOM_FIELD_REGEXP
+          data = $3
+          current_key = "cf_#{($1 || $2)}".gsub(/ /, '_')
+        when REGULAR_FIELD_REGEXP
+          data = $2
+          current_key = $1.strip.underscore
         else
-          key = ln.delete_at(0).strip.underscore
+          data = line
         end
-        value = ln.join(":").strip
-        hash[key] = value if key
+
+        if current_key
+          hash[current_key] ||= ""
+          hash[current_key] << data << "\n"
+        end
       end
+
+      return false if hash.empty?
+
+      # strip values
+      hash.each { |k, v| hash[k].strip! if hash[k] }
+
+      # id is integer
       hash["id"] = hash["id"].split("/").last.to_i
+
       hash
     end
 

@@ -60,9 +60,9 @@ describe "Ticket" do
     end
     
     it 'should give back an array of strings' do
-      connection = mock('connection', :get => "200 OK\n23:SomeTicket\n33:Another")
+      connection = mock('connection', :get => "200 OK\n23:SomeTicket\n33:Another\nMultilineValue")
       Roart::Ticket.should_receive(:connection).and_return(connection)
-      Roart::Ticket.send(:page_array, 'uri').should == ['23:SomeTicket', '33:Another']
+      Roart::Ticket.send(:page_array, 'uri').should == ['23:SomeTicket', '33:Another', 'MultilineValue']
     end
     
   end
