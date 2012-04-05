@@ -29,3 +29,18 @@ CF-Contact Name: some_guy
 CF-Contact Phone:
 CF-CMSID:
 CF-IssueCategory: DSL - Modem/Router Config
+
+CF-Contact Source: <contact-info>
+      <name>Jane Smith</name>
+      <company>AT&amp;T</company>
+      <phone>(212) 555-4567</phone>
+    </contact-info>
+
+CF.{NEW BTN}: 2035328269
+CF.{Feed Source}: <item>
+    <title>Example entry</title>
+    <description>Here is some text containing an interesting description.</description>
+    <link>http://www.wikipedia.org/</link>
+    <guid>unique string per item</guid>
+    <pubDate>Mon, 06 Sep 2009 16:45:00 +0000 </pubDate>
+  </item>
