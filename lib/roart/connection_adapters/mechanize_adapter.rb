@@ -11,11 +11,21 @@ module Roart
       def login(config)
         @conf.merge!(config)
         agent = Mechanize.new
-        page = agent.get(@conf[:server])
-        form = page.form('login')
-        form.user = @conf[:user]
-        form.pass = @conf[:pass]
-        page = agent.submit form
+
+        if config[:ssl_verify] == :none.to_sym
+          agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+
+        if config[:auth_method] == :basic.to_sym
+          agent.add_auth(@conf[:server], @conf[:user], @conf[:pass])
+        else
+          page = agent.get(@conf[:server])
+          form = page.form('login')
+          form.user = @conf[:user]
+          form.pass = @conf[:pass]
+          page = agent.submit form
+        end
+
         @agent = agent
       end
 
