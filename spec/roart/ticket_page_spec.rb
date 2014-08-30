@@ -32,7 +32,21 @@ describe 'ticket page' do
 		end
 		
 	end
-  
+
+  describe 'reading an old ticket (v3.2.1)' do
+
+    before do
+      @page = File.open(File.join(File.dirname(__FILE__), %w[ .. test_data ticket-v3.2.1.txt])).readlines.join
+      @page = @page.split("\n")
+      @page.extend(Roart::TicketPage)
+    end
+
+    it 'should unfold multiline fields' do
+      @page.to_hash[:requestors].should match('steve@oceanic.com')
+      @page.to_hash[:requestors].should match('scott@oceanic.com')
+    end
+  end
+
   describe 'search array' do
     
     before do
