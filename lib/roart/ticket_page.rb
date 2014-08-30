@@ -6,6 +6,7 @@ module Roart
 
     def to_hash
       hash = HashWithIndifferentAccess.new
+      unfold_fields!
       self.delete_if{|x| !x.include?(":")}
       return false if self.size == 0
       self.each do |ln|
@@ -22,6 +23,11 @@ module Roart
       end
       hash["id"] = hash["id"].split("/").last.to_i
       hash
+    end
+
+    def unfold_fields!
+      unfolded = join("\n").gsub(/\n +/, " ")
+      replace(unfolded.lines)
     end
 
     def to_search_list_array

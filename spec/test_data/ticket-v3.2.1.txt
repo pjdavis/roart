@@ -1,0 +1,26 @@
+RT/3.2.1 200 Ok
+
+id: ticket/815
+Queue: RspecTests
+Owner: chrisdambrosio
+Creator: chrisdambrosio
+Subject: Support very old installations
+Status: open
+Priority: 0
+InitialPriority: 0
+FinalPriority: 0
+
+Requestors: scott@oceanic.com,
+            steve@oceanic.com
+
+Cc:
+AdminCc:
+Created: Mon Aug 11 11:34:24 2014
+Starts: Not set
+Started: Not set
+Due: Not set
+Resolved: Not set
+Told: Not set
+TimeEstimated: 0
+TimeWorked: 0
+TimeLeft: 0
