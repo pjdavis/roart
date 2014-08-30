@@ -293,7 +293,6 @@ module Roart
         page = page.split("\n")
         status = page.delete_at(0)
         if status.include?("200")
-          page.delete_if{|x| !x.include?(":")}
           page
         else
           raise TicketSystemInterfaceError, "Error Getting Ticket: #{status}"
